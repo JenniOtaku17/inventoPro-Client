@@ -43,9 +43,10 @@
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
                         <td>{{ item.productoId }}</td>
-                        <td>{{ item.cedula }}</td>
-                        <td>{{ item.nombre }} {{ item.apellido }}</td>
-                        <td>{{ formatPhoneNumber(item.telefono) }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.precio }}</td>
+                        <td>{{ item.impuesto }}</td>
+                        <td>{{ item.almacenId }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.productoId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openProducto(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
@@ -96,9 +97,10 @@
             user: null,
             headers: [
                 { text: "Código", value: 'productoId' },
-                { text: "Cédula", value: 'cedula' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Teléfono", value: "telefono", align: "start" },
+                { text: "Precio", value: "precio", align: "start" },
+                { text: "Impuesto", value: "impuesto", align: "start" },
+                { text: "Almacen", value: "almacenId", align: "start" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -144,19 +146,6 @@
             }
             this.dialog = false;
             this.editable = null;
-        },
-
-        formatPhoneNumber( str ){
-            let cleaned = ('' + str).replace(/\D/g, '');
-    
-            let match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-            
-            if (match) {
-            let intlCode = (match[1] ? '+1 ' : '')
-            return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
-            }
-            
-            return str;
         },
     
         async deleteProducto(producto){
