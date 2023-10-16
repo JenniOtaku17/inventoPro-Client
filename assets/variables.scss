@@ -1,0 +1,113 @@
+
+
+::-webkit-scrollbar{
+    -webkit-box-shadow: none !important;
+    background-color: #EFEFEF;
+    width: 7px!important;
+    height: 7px!important;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #24A645!important;
+    border-radius: 10px!important;
+}
+::-webkit-scrollbar-track{
+    -webkit-box-shadow: none !important;
+    border-radius: 10px!important;
+    background-color: #EFEFEF;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+-webkit-appearance: none; 
+margin: 0; 
+}
+input[type=number] { -moz-appearance:textfield; }
+
+.v-btn{
+    text-transform: unset !important;
+    border-radius: 10px;
+}
+
+.v-card{
+    border-radius: 10px!important;
+}
+
+.textFieldCustom{
+
+    .v-input__control{
+        font-size: 14px;
+    }
+
+    label{    
+        font-size: 14px;
+    }
+    
+    fieldset{
+        border-radius: 10px;
+    }
+    
+}
+
+.textAreaCustom{
+    .v-input__control{
+        font-size: 14px;
+    }
+
+    label{    
+        font-size: 14px;
+    }
+    
+    .v-input__slot{
+        border-radius: 10px;
+    }
+
+}
+
+.not-form-input{
+    .v-text-field__details{
+        margin-bottom: 0px;
+        min-height: 0px!important;
+        height: 0px!important;
+    }
+    fieldset{
+        border-radius: 10px;
+    }
+}
+
+.errorMessage{
+    font-size: 13px;
+    color: rgb(182, 18, 18);
+}
+
+.customTable{
+    border-radius: 10px;
+
+    thead{
+        tr{
+            th{
+                background-color: #F7F8F9!important;
+                color:#144659!important;
+                white-space: pre;
+            }
+
+            th:first-child { 
+                border-top-left-radius: 10px;
+            }
+            th:last-child { 
+                border-top-right-radius: 10px;
+            }
+        }
+    }
+
+    tbody:last-child{
+        tr{
+            td{
+                border-bottom: 1px solid #d8dad8;
+            }
+        }
+    }
+}
+
+.v-navigation-drawer__border{
+    display: none
+}

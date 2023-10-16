@@ -1,0 +1,204 @@
+<template>
+
+    <v-container class="px-6 pb-10 pageAlmacen">
+      <v-row class="px-4">
+        <v-col cols="12" sm="5" class="text-left">
+            <h3 class="primary--text moduleTitle">
+                Módulo de Almacenes &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+            </h3>
+            <h5 class="text--secondary">
+                Administra todos los almacenes de tu empresa, puedes añadir uno nuevo o modificar o eliminar alguno existente.
+            </h5>
+        </v-col>
+        <v-col cols="12" sm="7" class="text-right">
+            <v-btn color="primary" elevation="0" @click="openAlmacen(false, null)">
+                <v-icon left>mdi-plus</v-icon>Agregar Almacen
+            </v-btn>
+        </v-col>
+      </v-row>
+  
+      <v-row class="mt-4">
+        <v-col>
+          <v-card flat>
+            <v-row class="px-4">
+                <v-col cols="12" sm="8">
+                </v-col>
+                <v-col cols="12" sm="4" class="text-right">
+                    <v-text-field
+                    v-model="filterText"
+                    append-icon="mdi-magnify"
+                    rounded flat outlined dense
+                    label="Buscar"
+                    id="id" class="not-form-input"
+                    autocomplete="off"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+            <v-card-text>
+              <v-data-table :headers="headers" :items="filteredAlmacenes" :loading="isLoading" dense hide-default-footer
+                loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
+                :page="page" :items-per-page="itemsPerPage"
+              >
+                <template v-slot:body="{ items }" v-if="filteredAlmacenes && filteredAlmacenes.length > 0">
+                  <tbody>
+                    <tr v-for="item in items" class="puntero" :key="item.almacenId">
+                        <td>{{ item.almacenId }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.ubicacion }}</td>
+                        <td align="center">
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.almacenId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="secondary" icon small @click="openAlmacen(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="error" icon small @click="deleteAlmacen(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                        </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-data-table>
+            </v-card-text>
+            <v-row class="px-5">
+                <v-pagination
+                    v-model="page"
+                    class="my-4"
+                    :length="paginationLength"
+                    circle
+                    :total-visible="6"
+                ></v-pagination>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+      <popup v-if="dialog" :activador="dialog" @actualizar="actualizar" :editable="editable" />
+    </v-container>
+  </template>
+  
+  <script>
+  import popup from "~/components/almacen/popup";
+  
+  export default {
+
+    middleware: "auth-this",
+  
+    components: {
+      popup
+    },
+  
+    async mounted(){
+        this.user = await this.$store.state.userManager.user;
+        this.getAll();
+    },
+  
+    data() {
+        return {
+            isLoading: false,
+            almacenes: [],
+            filterText: '',
+            user: null,
+            headers: [
+                { text: "Código", value: 'almacenId' },
+                { text: "Nombre", value: "nombre", align: "start" },
+                { text: "Ubicacion", value: "ubicacion", align: "start" },
+                { text: "Acciones", align:'center', sortable: false }
+            ],
+            dialog: false,
+            editable: null,
+            itemsPerPage: 5,
+            page: 1,
+            paginationLength: 1,
+        };
+    },
+  
+    methods: {
+        async getAll() {
+            try{
+                this.isLoading = true;
+                this.page = 1;
+                let almacenes = await this.$api.get(`api/almacen`);
+
+                this.almacenes = await almacenes.data;
+                this.paginationLength = Math.ceil(this.almacenes.length/this.itemsPerPage);
+                this.$print(this.almacenes);
+                this.isLoading = false;
+
+            }catch(error){
+                this.$print(error)
+            }
+            
+        },
+
+        verDetalle( id ){
+            this.$router.push({ path: '/almacen/detalle', query: { id } })
+        },
+    
+        openAlmacen( toEdit, obj){
+            if(toEdit){
+                this.editable = obj;
+            }
+            this.dialog = true;
+        },
+    
+        actualizar( toUpdate ) {
+            if(toUpdate){
+                this.getAll();
+            }
+            this.dialog = false;
+            this.editable = null;
+        },
+    
+        async deleteAlmacen(almacen){
+            try{
+
+                let result = await this.$confirm('Va a emilinar un almacen', `Está seguro que desea eliminar al almacen ${almacen.nombre} ${almacen.apellido}?`)
+                if(result.isConfirmed){
+                    await this.$api.put("api/almacen/changestatus/"+almacen.almacenId );
+                    this.getAll();
+                }
+
+            }catch(error){
+                this.$print(error);
+
+                let text = "Ocurrió un error al eliminar almacen"
+                if(error.response.data.error){
+                    text = error.response.data.error;
+                }
+                this.$alert('error', 'Almacen', text, null);
+            }
+        },
+    
+        filtro(almacenes,textoFiltro){
+            try{
+                if(!almacenes) return [];
+        
+                return almacenes
+                .filter(
+                    e => e.nombre.toLowerCase().includes(textoFiltro.toLowerCase()) 
+                )
+            }catch(error){
+                console.log(error);
+            }
+    
+        },
+        
+  
+    },
+  
+    computed: {
+    
+        filteredAlmacenes(){
+            return this.filtro(this.almacenes, this.filterText)
+        }
+    
+    }
+  };
+  </script>
+  
+  <style lang='scss' >
+
+  .pageAlmacen{
+
+    .moduleTitle{
+        font-size: 22px;
+        font-weight: 500;
+    }
+  }
+
+  </style>
