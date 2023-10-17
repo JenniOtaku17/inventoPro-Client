@@ -9,11 +9,8 @@
     >
       <v-list>
         <v-list-item class="px-2 logoContainer">
-          <img src="~assets/images/logo.png" :width="miniVariant?'100%':'35%'" /> 
+          <img src="~assets/images/logo.png" :width="miniVariant?'100%':'40%'" /> 
         </v-list-item>
-
-        
-        <br>
 
         <v-list-item
           v-for="(item, i) in items"

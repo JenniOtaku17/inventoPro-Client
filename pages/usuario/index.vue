@@ -42,12 +42,12 @@
                 <template v-slot:body="{ items }" v-if="filteredUsuarios && filteredUsuarios.length > 0">
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
-                        <td>{{ item.usuarioId }}</td>
+                        <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.correo }}</td>
                         <td>{{ item.rol }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.usuarioId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openUsuario(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteUsuario(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -95,7 +95,7 @@
             filterText: '',
             user: null,
             headers: [
-                { text: "Código", value: 'usuarioId' },
+                { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
                 { text: "Correo", value: "correo", align: "start" },
                 { text: "Rol", value: "rol", align: "start" },
@@ -151,7 +151,7 @@
 
                 let result = await this.$confirm('Va a emilinar un usuario', `Está seguro que desea eliminar al usuario ${usuario.nombre} ${usuario.apellido}?`)
                 if(result.isConfirmed){
-                    await this.$api.put("api/usuario/changestatus/"+usuario.usuarioId );
+                    await this.$api.put("api/usuario/changestatus/"+usuario.id );
                     this.getAll();
                 }
 

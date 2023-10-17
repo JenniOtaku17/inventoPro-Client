@@ -8,7 +8,7 @@
             <div style="width:380px">
                 <v-row justify="center">
                     <h1 class="titleLogin primary--text">
-                        LoanManager
+                        InventoPRO
                     </h1>
                 </v-row>
                 <div class="ml-15 mr-15">

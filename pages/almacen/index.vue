@@ -12,7 +12,7 @@
         </v-col>
         <v-col cols="12" sm="7" class="text-right">
             <v-btn color="primary" elevation="0" @click="openAlmacen(false, null)">
-                <v-icon left>mdi-plus</v-icon>Agregar Almacen
+                <v-icon left>mdi-plus</v-icon>Agregar Almacén
             </v-btn>
         </v-col>
       </v-row>
@@ -41,12 +41,12 @@
               >
                 <template v-slot:body="{ items }" v-if="filteredAlmacenes && filteredAlmacenes.length > 0">
                   <tbody>
-                    <tr v-for="item in items" class="puntero" :key="item.almacenId">
-                        <td>{{ item.almacenId }}</td>
+                    <tr v-for="item in items" class="puntero" :key="item.id">
+                        <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.ubicacion }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.almacenId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openAlmacen(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteAlmacen(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -94,9 +94,9 @@
             filterText: '',
             user: null,
             headers: [
-                { text: "Código", value: 'almacenId' },
+                { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Ubicacion", value: "ubicacion", align: "start" },
+                { text: "Ubicación", value: "ubicacion", align: "start" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -147,20 +147,20 @@
         async deleteAlmacen(almacen){
             try{
 
-                let result = await this.$confirm('Va a emilinar un almacen', `Está seguro que desea eliminar al almacen ${almacen.nombre} ${almacen.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un almacén', `Está seguro que desea eliminar al almacén ${almacen.nombre} ${almacen.apellido}?`)
                 if(result.isConfirmed){
-                    await this.$api.put("api/almacen/changestatus/"+almacen.almacenId );
+                    await this.$api.put("api/almacen/changestatus/"+almacen.id );
                     this.getAll();
                 }
 
             }catch(error){
                 this.$print(error);
 
-                let text = "Ocurrió un error al eliminar almacen"
+                let text = "Ocurrió un error al eliminar almacén"
                 if(error.response.data.error){
                     text = error.response.data.error;
                 }
-                this.$alert('error', 'Almacen', text, null);
+                this.$alert('error', 'Almacén', text, null);
             }
         },
     

@@ -42,13 +42,13 @@
                 <template v-slot:body="{ items }" v-if="filteredProductos && filteredProductos.length > 0">
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
-                        <td>{{ item.productoId }}</td>
+                        <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.precio }}</td>
                         <td>{{ item.impuesto }}</td>
-                        <td>{{ item.almacenId }}</td>
+                        <td>{{ item.id }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.productoId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openProducto(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteProducto(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -96,11 +96,11 @@
             filterText: '',
             user: null,
             headers: [
-                { text: "Código", value: 'productoId' },
+                { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
                 { text: "Precio", value: "precio", align: "start" },
                 { text: "Impuesto", value: "impuesto", align: "start" },
-                { text: "Almacen", value: "almacenId", align: "start" },
+                { text: "Almacén", value: "id", align: "start" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -153,7 +153,7 @@
 
                 let result = await this.$confirm('Va a emilinar un producto', `Está seguro que desea eliminar al producto ${producto.nombre} ${producto.apellido}?`)
                 if(result.isConfirmed){
-                    await this.$api.put("api/producto/changestatus/"+producto.productoId );
+                    await this.$api.put("api/producto/changestatus/"+producto.id );
                     this.getAll();
                 }
 

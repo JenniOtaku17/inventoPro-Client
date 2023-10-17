@@ -33,7 +33,7 @@
                             :type="show ? 'text' : 'password'" :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show = !show"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Confirmacion de clave</span>
+                            <span class="inputTitle" >Confirmación de clave</span>
                             <v-text-field  v-model="usuario.clave2" type="number"  dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"
                             :type="show1 ? 'text' : 'password'" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1"></v-text-field>
                         </v-col>

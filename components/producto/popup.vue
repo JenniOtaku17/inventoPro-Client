@@ -31,17 +31,17 @@
                     </v-row>
                     <v-row >
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Almacen</span>
-                            <v-select v-model="producto.almacenId" dense outlined :rules="inputRules" class="textFieldCustom" color="secondary" :items="almacenes" item-text="nombre" item-value="almacenId" append-icon="mdi-chevron-down"></v-select>
+                            <span class="inputTitle" >Almacén</span>
+                            <v-select v-model="producto.id" dense outlined :rules="inputRules" class="textFieldCustom" color="secondary" :items="almacenes" item-text="nombre" item-value="id" append-icon="mdi-chevron-down"></v-select>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Codigo de Barra</span>
+                            <span class="inputTitle" >Código de Barra</span>
                             <v-text-field  v-model="producto.codigoBarra" type="email"  dense outlined class="textFieldCustom" color="secondary"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row >
                         <v-col cols="12" md="12" class="py-0">
-                            <span class="inputTitle" >Descripcion</span>
+                            <span class="inputTitle" >Descripción</span>
                             <v-textarea v-model="producto.descripcion" rows="2" no-resize outlined class="textFieldCustom" color="secondary"></v-textarea>
                         </v-col>
                     </v-row>
@@ -111,7 +111,7 @@
             this.$emit("actualizar", false);
         },
 
-        close(){
+        close( product ){
             this.producto = {
                 cedula: null,
                 nombre: null,
@@ -121,7 +121,7 @@
                 descripcion: null,
                 estado: true
             };
-            this.$emit("actualizar", true);
+            this.$emit("actualizar", true, product);
         },
 
         async getAlmacenes() {
@@ -153,7 +153,7 @@
                     }
 
                     this.$print(response);
-                    this.close();
+                    this.close( this.producto );
 
                 }catch(error){
                     this.$print(error);

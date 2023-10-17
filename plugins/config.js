@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 const config = {
     version: '1.1',
-    host: "https://loanmanagerapi0.azurewebsites.net/",
+    host: "https://inventopro.azurewebsites.net/",
     testEnvironment: true
 }
 

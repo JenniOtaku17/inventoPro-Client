@@ -25,7 +25,7 @@
                             <v-textarea v-model="almacen.ubicacion" rows="3" no-resize outlined class="textFieldCustom" color="secondary"></v-textarea>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Descripcion</span>
+                            <span class="inputTitle" >Descripción</span>
                             <v-textarea v-model="almacen.descripcion" rows="3" no-resize outlined class="textFieldCustom" color="secondary"></v-textarea>
                         </v-col>
                     </v-row>
@@ -63,13 +63,13 @@
         ],
         isCreating: false,
         user: null,
-        title: 'Crear almacen',
+        title: 'Crear almacén',
         mounted: false,
     }),
     async mounted(){
 
       if(this.editable){
-        this.title = "Editar Almacen"
+        this.title = "Editar almacén"
         this.almacen = this.editable;
       }
       this.mounted = true;
@@ -122,7 +122,7 @@
                         text = error.response.data.error;
                     }
 
-                    this.$alert('error', 'Almacen', text, 3000);
+                    this.$alert('error', 'Almacén', text, 3000);
                 
                 }finally{
                     this.isCreating = false;

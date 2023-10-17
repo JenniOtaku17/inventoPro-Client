@@ -7,12 +7,12 @@
                 Módulo de Recepciones &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
             </h3>
             <h5 class="text--secondary">
-                Administra todas las recepciones de tu empresa, puedes añadir una nueva o modificar o eliminar alguna existente.
+                Administra todas las recepciones de tu empresa, puedes añadir una nueva o verificar alguna existente.
             </h5>
         </v-col>
         <v-col cols="12" sm="7" class="text-right">
             <v-btn color="primary" elevation="0" @click="openCreacion">
-                <v-icon left>mdi-plus</v-icon>Agregar Recepcion
+                <v-icon left>mdi-plus</v-icon>Agregar Recepción
             </v-btn>
         </v-col>
       </v-row>
@@ -41,12 +41,12 @@
               >
                 <template v-slot:body="{ items }" v-if="filteredRecepciones && filteredRecepciones.length > 0">
                   <tbody>
-                    <tr v-for="item in items" class="puntero" :key="item.recepcionId">
-                        <td>{{ item.recepcionId }}</td>
+                    <tr v-for="item in items" class="puntero" :key="item.id">
+                        <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.ubicacion }}</td>
                         <td align="center">
-                            <v-btn class="elevation-0" color="error" icon small @click="deleteProducto(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+                            <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                         </td>
                     </tr>
                   </tbody>
@@ -86,9 +86,9 @@
             filterText: '',
             user: null,
             headers: [
-                { text: "Código", value: 'recepcionId' },
+                { text: "Código", value: 'id' },
                 { text: "Fecha", value: "fecha", align: "start" },
-                { text: "Proveedor", value: "proveedorId", align: "start" },
+                { text: "Proveedor", value: "id", align: "start" },
                 { text: "Total", value: "total", align: "start" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
@@ -130,7 +130,7 @@
         
                 return recepciones
                 .filter(
-                    e => e.recepcionId.toLowerCase().includes(textoFiltro.toLowerCase()) 
+                    e => e.id.toLowerCase().includes(textoFiltro.toLowerCase()) 
                 )
             }catch(error){
                 console.log(error);

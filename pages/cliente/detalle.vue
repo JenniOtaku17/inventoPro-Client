@@ -40,7 +40,7 @@
                                 <v-row>
                                     <v-col cols="12" md="6">
                                         <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Código: </span>
-                                        <span class="descriptionText">{{ cliente.clienteId }}</span>
+                                        <span class="descriptionText">{{ cliente.id }}</span>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Nombre: </span>

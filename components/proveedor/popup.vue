@@ -36,7 +36,7 @@
                             <v-textarea v-model="proveedor.ubicacion" rows="3" no-resize outlined class="textFieldCustom" color="secondary"></v-textarea>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Descripcion</span>
+                            <span class="inputTitle" >Descripción</span>
                             <v-textarea v-model="proveedor.descripcion" rows="3" no-resize outlined class="textFieldCustom" color="secondary"></v-textarea>
                         </v-col>
                     </v-row>

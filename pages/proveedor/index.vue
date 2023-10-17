@@ -42,12 +42,12 @@
                 <template v-slot:body="{ items }" v-if="filteredProveedores && filteredProveedores.length > 0">
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
-                        <td>{{ item.proveedorId }}</td>
+                        <td>{{ item.id }}</td>
                         <td>{{ item.rnc }}</td>
                         <td>{{ item.nombre }} {{ item.apellido }}</td>
                         <td>{{ formatPhoneNumber(item.telefono) }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.proveedorId)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openProveedor(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteProveedor(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -95,7 +95,7 @@
             filterText: '',
             user: null,
             headers: [
-                { text: "Código", value: 'proveedorId' },
+                { text: "Código", value: 'id' },
                 { text: "RNC", value: 'rnc' },
                 { text: "Nombre", value: "nombre", align: "start" },
                 { text: "Teléfono", value: "telefono", align: "start" },
@@ -164,7 +164,7 @@
 
                 let result = await this.$confirm('Va a emilinar un Proveedor', `Está seguro que desea eliminar al Proveedor ${Proveedor.nombre} ${Proveedor.apellido}?`)
                 if(result.isConfirmed){
-                    await this.$api.put("api/Proveedor/changestatus/"+Proveedor.proveedorId );
+                    await this.$api.put("api/Proveedor/changestatus/"+Proveedor.id );
                     this.getAll();
                 }
 

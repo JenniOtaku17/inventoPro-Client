@@ -95,7 +95,7 @@
         </v-col>
         <v-col cols="12" md="3" class="py-0" v-if="tipoReporte == 'prestamosCliente'">
             <span class="inputTitle" >Cliente</span>
-            <v-select v-model="cliente" dense outlined class="textFieldCustom" color="secondary" :items="clientes" :item-text="nombreCompleto" item-value="clienteId" append-icon="mdi-chevron-down"></v-select>
+            <v-select v-model="cliente" dense outlined class="textFieldCustom" color="secondary" :items="clientes" :item-text="nombreCompleto" item-value="id" append-icon="mdi-chevron-down"></v-select>
         </v-col>
         <v-col cols="12" md="3" class="py-0" v-if="tipoReporte == 'pagosPrestamo'">
             <span class="inputTitle" >Prestamo</span>
