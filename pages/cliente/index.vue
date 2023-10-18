@@ -41,10 +41,10 @@
               >
                 <template v-slot:body="{ items }" v-if="filteredClientes && filteredClientes.length > 0">
                   <tbody>
-                    <tr v-for="item in items" class="puntero" :key="item.departamentoId">
+                    <tr v-for="item in items" class="puntero" :key="item.id">
                         <td>{{ item.id }}</td>
                         <td>{{ item.cedula }}</td>
-                        <td>{{ item.nombre }} {{ item.apellido }}</td>
+                        <td>{{ item.nombre }}</td>
                         <td>{{ formatPhoneNumber(item.telefono) }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
@@ -162,7 +162,7 @@
         async deleteCliente(cliente){
             try{
 
-                let result = await this.$confirm('Va a emilinar un cliente', `Está seguro que desea eliminar al cliente ${cliente.nombre} ${cliente.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un cliente', `Está seguro que desea eliminar al cliente ${cliente.nombre}?`)
                 if(result.isConfirmed){
                     await this.$api.put("api/cliente/changestatus/"+cliente.id );
                     this.getAll();

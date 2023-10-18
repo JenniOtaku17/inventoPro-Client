@@ -45,7 +45,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.correo }}</td>
-                        <td>{{ item.rol }}</td>
+                        <td>{{ item.role.name }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openUsuario(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
@@ -98,7 +98,7 @@
                 { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
                 { text: "Correo", value: "correo", align: "start" },
-                { text: "Rol", value: "rol", align: "start" },
+                { text: "Rol", value: "roleId", align: "start" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
