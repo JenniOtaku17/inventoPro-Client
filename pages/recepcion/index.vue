@@ -4,7 +4,7 @@
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
-                Módulo de Recepciones &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+                Módulo de Recepciones &nbsp;<v-icon color="primary" class="mb-1">mdi-package-variant-closed-plus</v-icon>
             </h3>
             <h5 class="text--secondary">
                 Administra todas las recepciones de tu empresa, puedes añadir una nueva o verificar alguna existente.
@@ -43,8 +43,9 @@
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.nombre }}</td>
-                        <td>{{ item.ubicacion }}</td>
+                        <td align="center">{{ formatDate(item.fecha, false) }}</td>
+                        <td align="center">{{ item.proveedor?.nombre }}</td>
+                        <td align="right"><formatNumber :value="item.total" /></td>
                         <td align="center">
                             <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                         </td>
@@ -69,16 +70,21 @@
   </template>
   
   <script>
-  
+  import formatNumber from "~/components/utils/formatNumber";
+
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-facturador",
   
     async mounted(){
         this.user = await this.$store.state.userManager.user;
         this.getAll();
     },
-  
+
+    components: {
+        formatNumber
+    },
+
     data() {
         return {
             isLoading: false,
@@ -87,10 +93,10 @@
             user: null,
             headers: [
                 { text: "Código", value: 'id' },
-                { text: "Fecha", value: "fecha", align: "start" },
-                { text: "Proveedor", value: "id", align: "start" },
-                { text: "Total", value: "total", align: "start" },
-                { text: "Acciones", align:'center', sortable: false }
+                { text: "Fecha", value: "fecha", align: "center" },
+                { text: "Proveedor", value: "id", align: "center" },
+                { text: "Total", value: "total", align: "end" },
+                { text: "Acción", align:'center', sortable: false }
             ],
             itemsPerPage: 5,
             page: 1,
@@ -116,6 +122,10 @@
             
         },
 
+        formatDate( date, hours){
+            return this.$formatDate(date, hours);
+        },
+
         openCreacion( ){
             this.$router.push({ path: '/recepcion/creacion' })
         },
@@ -130,7 +140,7 @@
         
                 return recepciones
                 .filter(
-                    e => e.id.toLowerCase().includes(textoFiltro.toLowerCase()) 
+                    e => e.id.toString().toLowerCase().includes(textoFiltro.toLowerCase()) 
                 )
             }catch(error){
                 console.log(error);

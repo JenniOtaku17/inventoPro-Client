@@ -43,9 +43,9 @@
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.cedula }}</td>
                         <td>{{ item.nombre }}</td>
-                        <td>{{ formatPhoneNumber(item.telefono) }}</td>
+                        <td align="center">{{ item.cedula }}</td>
+                        <td align="center">{{ formatPhoneNumber(item.telefono) }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openCliente(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
@@ -77,7 +77,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-facturador",
   
     components: {
       popup
@@ -96,9 +96,9 @@
             user: null,
             headers: [
                 { text: "Código", value: 'id' },
-                { text: "Cédula", value: 'cedula' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Teléfono", value: "telefono", align: "start" },
+                { text: "Cédula", value: 'cedula', align: "center", sortable: false },
+                { text: "Teléfono", value: "telefono", align: "center", sortable: false },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -186,7 +186,6 @@
                 return clientes
                 .filter(
                     e => e.nombre.toLowerCase().includes(textoFiltro.toLowerCase()) ||
-                         e.apellido.toLowerCase().includes(textoFiltro.toLowerCase()) ||
                          e.cedula.toLowerCase().includes(textoFiltro.toLowerCase())
                 )
             }catch(error){

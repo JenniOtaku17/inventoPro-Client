@@ -4,7 +4,7 @@
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
-                Módulo de Proveedores &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+                Módulo de Proveedores &nbsp;<v-icon color="primary" class="mb-1">mdi-account-box-multiple</v-icon>
             </h3>
             <h5 class="text--secondary">
                 Administra todos los proveedores de tu empresa, puedes añadir uno nuevo o modificar o eliminar alguno existente.
@@ -43,9 +43,9 @@
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.rnc }}</td>
-                        <td>{{ item.nombre }} {{ item.apellido }}</td>
-                        <td>{{ formatPhoneNumber(item.telefono) }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td align="center">{{ item.rnc }}</td>
+                        <td align="center">{{ formatPhoneNumber(item.telefono) }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openProveedor(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
@@ -77,7 +77,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-facturador",
   
     components: {
       popup
@@ -96,9 +96,9 @@
             user: null,
             headers: [
                 { text: "Código", value: 'id' },
-                { text: "RNC", value: 'rnc' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Teléfono", value: "telefono", align: "start" },
+                { text: "RNC", value: 'rnc', align: "center", sortable: false  },
+                { text: "Teléfono", value: "telefono", align: "center", sortable: false  },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -162,7 +162,7 @@
         async deleteProveedor(Proveedor){
             try{
 
-                let result = await this.$confirm('Va a emilinar un Proveedor', `Está seguro que desea eliminar al Proveedor ${Proveedor.nombre} ${Proveedor.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un Proveedor', `Está seguro que desea eliminar al proveedor ${Proveedor.nombre}?`)
                 if(result.isConfirmed){
                     await this.$api.put("api/Proveedor/changestatus/"+Proveedor.id );
                     this.getAll();

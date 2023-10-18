@@ -28,41 +28,6 @@ export default context => {
           })
       
           api.setBaseURL(zconfig.host)
-
-          api.onResponseError( async (response) => {
-
-            if(response.response.status === 401) {
-                auth.signOut().then(()=> {
-                    redirect('/')
-                });
-  
-            }else{
-              if(response.response){
-                let text = response.response.data.error;
-                  zalert('error', 'Solicitud no procesada', text, null);
-              }
-              return response;
-            }
-              
-          })
-
-          api.onError( async (error) => {
-
-            if(error === 401) {
-                auth.signOut().then(()=> {
-                    redirect('/')
-                });
-  
-            }else{
-              if(error.response){
-                  let text = error.response.data.error;
-                  zalert('error', 'Solicitud no procesada', text, null);
-              }
-              return error;
-            }
-              
-          })
-
           Vue.prototype.$api = await api;
 
         }else{
@@ -71,8 +36,9 @@ export default context => {
 
       });
 
-      auth.onAuthStateChanged(user => {
+      auth.onAuthStateChanged( async (user) => {
         if (user) {
+
           setInterval(async () => {
             let token = await auth.currentUser.getIdToken(true);
             }, (90000)

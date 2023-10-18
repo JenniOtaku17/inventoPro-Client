@@ -4,7 +4,7 @@
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
-                Módulo de Almacenes &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+                Módulo de Almacenes &nbsp;<v-icon color="primary" class="mb-1">mdi-domain</v-icon>
             </h3>
             <h5 class="text--secondary">
                 Administra todos los almacenes de tu empresa, puedes añadir uno nuevo o modificar o eliminar alguno existente.
@@ -76,7 +76,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-admin",
   
     components: {
       popup
@@ -147,7 +147,7 @@
         async deleteAlmacen(almacen){
             try{
 
-                let result = await this.$confirm('Va a emilinar un almacén', `Está seguro que desea eliminar al almacén ${almacen.nombre} ${almacen.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un almacén', `Está seguro que desea eliminar al almacén ${almacen.nombre}?`)
                 if(result.isConfirmed){
                     await this.$api.put("api/almacen/changestatus/"+almacen.id );
                     this.getAll();

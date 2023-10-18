@@ -103,23 +103,18 @@ export default {
           
             signIn(auth, this.form.correo, this.form.contraseña).then( async data => {
                 this.$print(data);
-                this.$router.push({ path: '/cliente' })
+                this.$router.push({ path: '/' })
 
             }).catch(error => {
                 this.$print(error);
 
                 switch(error.code){
 
-                    case 'auth/wrong-password':
+                    case 400:
                         this.error = 'Contraseña incorrecta';
-                        this.$axios.get("api/Usuario/PostLoginAttempt/"+this.form.correo);
-                        break;
-                    case 'auth/user-disabled':
-                        this.error = 'Este usuario se encuentra deshabilitado';
                         break;
                     default:
                         this.error = 'Demasiados intentos, intente nuevamente mas tarde';
-                        this.$axios.get("api/Usuario/PostLoginAttempt/"+this.form.correo);
                         break;
                 }
                 

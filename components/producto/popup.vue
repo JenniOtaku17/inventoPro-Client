@@ -15,30 +15,37 @@
                             <v-text-field  v-model="producto.nombre"  dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Precio</span>
-                            <v-text-field  v-model="producto.precio" type="number"  dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row >
-                        <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Impuesto</span>
-                            <v-text-field  v-model="producto.impuesto" type="number"  dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" md="6" class="py-0">
                             <span class="inputTitle" >Unidad</span>
                             <v-text-field  v-model="producto.unidad" type="email"  dense outlined class="textFieldCustom" color="secondary"></v-text-field>
                         </v-col>
                     </v-row>
+
                     <v-row >
                         <v-col cols="12" md="6" class="py-0">
                             <span class="inputTitle" >Almacén</span>
-                            <v-select v-model="producto.id" dense outlined :rules="inputRules" class="textFieldCustom" color="secondary" :items="almacenes" item-text="nombre" item-value="id" append-icon="mdi-chevron-down"></v-select>
+                            <v-select v-model="producto.almacenId" dense outlined :rules="inputRules" class="textFieldCustom" color="secondary" :items="almacenes" item-text="nombre" item-value="id" append-icon="mdi-chevron-down"></v-select>
                         </v-col>
                         <v-col cols="12" md="6" class="py-0">
                             <span class="inputTitle" >Código de Barra</span>
                             <v-text-field  v-model="producto.codigoBarra" type="email"  dense outlined class="textFieldCustom" color="secondary"></v-text-field>
                         </v-col>
                     </v-row>
+
+                    <v-row >
+                        <v-col cols="12" md="4" class="py-0">
+                            <span class="inputTitle" >Precio</span>
+                            <v-text-field  v-model="producto.precio" type="number" min="0" dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" class="py-0">
+                            <span class="inputTitle" >Impuesto</span>
+                            <v-text-field  v-model="producto.impuesto" type="number" min="0" dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" class="py-0">
+                            <span class="inputTitle" >Existencia</span>
+                            <v-text-field  v-model="producto.existencia" type="number" min="0" dense outlined class="textFieldCustom" color="secondary" :rules="inputRules"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    
                     <v-row >
                         <v-col cols="12" md="12" class="py-0">
                             <span class="inputTitle" >Descripción</span>
@@ -68,11 +75,13 @@
     ],
     data: () => ({
         producto: {
-            cedula: null,
             nombre: null,
-            correo: null,
-            telefono: null,
-            ubicacion: null,
+            precio: null,
+            impuesto: null,
+            unidad: null,
+            existencia: null,
+            almacenId: null,
+            codigoBarra: null,
             descripcion: null,
             estado: true
         },
@@ -100,11 +109,13 @@
 
         clean(){
             this.producto = {
-                cedula: null,
                 nombre: null,
-                correo: null,
-                telefono: null,
-                ubicacion: null,
+                precio: null,
+                impuesto: null,
+                unidad: null,
+                existencia: null,
+                almacenId: null,
+                codigoBarra: null,
                 descripcion: null,
                 estado: true
             };
@@ -113,11 +124,13 @@
 
         close( product ){
             this.producto = {
-                cedula: null,
                 nombre: null,
-                correo: null,
-                telefono: null,
-                ubicacion: null,
+                precio: null,
+                impuesto: null,
+                unidad: null,
+                existencia: null,
+                almacenId: null,
+                codigoBarra: null,
                 descripcion: null,
                 estado: true
             };
@@ -153,7 +166,7 @@
                     }
 
                     this.$print(response);
-                    this.close( this.producto );
+                    this.close( response.data );
 
                 }catch(error){
                     this.$print(error);

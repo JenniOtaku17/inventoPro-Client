@@ -1,16 +1,16 @@
 <template>
 
-    <v-container class="px-12 pb-10 pageDetalleCliente" v-if="cliente">
+    <v-container class="px-12 pb-10 pageDetalleProveedor" v-if="proveedor">
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
                 <v-btn color="primary" icon @click="goBack" class="mb-2 backButton">
                     <v-icon>mdi-arrow-left-top-bold</v-icon>
                 </v-btn>
-                {{ cliente.nombre }} {{ cliente.apellido }}
+                {{ proveedor.nombre }} {{ proveedor.apellido }}
             </h3>
             <h4 class="text--secondary">
-                Información detallada del cliente
+                Información detallada del proveedor
             </h4>
         </v-col>
       </v-row>
@@ -24,18 +24,18 @@
                             <v-row>
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Código: </span>
-                                    <span class="descriptionText">{{ cliente.id }}</span>
+                                    <span class="descriptionText">{{ proveedor.id }}</span>
                                 </v-col>
                             </v-row>
 
                             <v-row >
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Nombre: </span>
-                                    <span class="descriptionText">{{ cliente.nombre }} {{ cliente.apellido }}</span>
+                                    <span class="descriptionText">{{ proveedor.nombre }} {{ proveedor.apellido }}</span>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                    <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Cédula: </span>
-                                    <span class="descriptionText">{{ cliente.cedula }}</span>
+                                    <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">RNC: </span>
+                                    <span class="descriptionText">{{ proveedor.rnc }}</span>
                                 </v-col>
                             </v-row>
 
@@ -43,14 +43,14 @@
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Teléfono: </span>
                                     <span class="descriptionText">
-                                        <span v-if="cliente.telefono">{{ formatPhoneNumber(cliente.telefono) }}</span>
+                                        <span v-if="proveedor.telefono">{{ formatPhoneNumber(proveedor.telefono) }}</span>
                                         <span v-else>Sin registrar</span>
                                     </span>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Correo: </span>
                                     <span class="descriptionText">
-                                        <span v-if="cliente.correo">{{ cliente.correo }}</span>
+                                        <span v-if="proveedor.correo">{{ proveedor.correo }}</span>
                                         <span v-else>Sin registrar</span>
                                     </span>
                                 </v-col>
@@ -60,14 +60,14 @@
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Dirección: </span>
                                     <span class="descriptionText">
-                                        <span v-if="cliente.ubicacion">{{ cliente.ubicacion }}</span>
+                                        <span v-if="proveedor.ubicacion">{{ proveedor.ubicacion }}</span>
                                         <span v-else>Sin registrar</span>
                                     </span>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <span :class="$vuetify.theme.dark == true? 'titleText primary--text': 'titleText secondary--text'">Descripción: </span>
                                     <span class="descriptionText">
-                                        <span v-if="cliente.descripcion">{{ cliente.descripcion }}</span>
+                                        <span v-if="proveedor.descripcion">{{ proveedor.descripcion }}</span>
                                         <span v-else>Sin registrar</span>
                                     </span>
                                 </v-col>
@@ -106,7 +106,7 @@
     data() {
         return {
             isLoading: false,
-            cliente: null,
+            proveedor: null,
             user: null,
         };
     },
@@ -116,12 +116,12 @@
             try{
                 this.isLoading = true;
                 let id = this.$route.query.id;
-                let cliente = await this.$api.get(`api/cliente/${id}`);
+                let proveedor = await this.$api.get(`api/proveedor/${id}`);
 
-                this.cliente = await cliente.data;
-                this.prestamos = await cliente.data.prestamos.filter((p)=>p.estado == true);
+                this.proveedor = await proveedor.data;
+                this.prestamos = await proveedor.data.prestamos.filter((p)=>p.estado == true);
 
-                this.$print(this.cliente);
+                this.$print(this.proveedor);
                 this.isLoading = false;
 
             }catch(error){
@@ -142,7 +142,7 @@
             
             return str;
         },
-
+        
         goBack() {
             this.$router.go(-1);
         },
@@ -155,7 +155,7 @@
   
   <style lang='scss' >
 
-  .pageDetalleCliente{
+  .pageDetalleProveedor{
 
     .v-slide-group__content{
         border-bottom: 2px solid #9ca39d;

@@ -23,7 +23,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" md="6" class="py-0">
+              <v-col cols="12" md="6" class="py-0" v-if="editable == null">
                 <span class="inputTitle">Correo</span>
                 <v-text-field
                   v-model="usuario.correo"
@@ -49,6 +49,28 @@
                   item-value="id"
                   append-icon="mdi-chevron-down"
                 ></v-select>
+              </v-col>
+            </v-row>
+            <v-row v-if="editable == null">
+              <v-col cols="12" md="6" class="py-0">
+                <span class="inputTitle">Clave</span>
+                <v-text-field
+                  v-model="usuario.clave" :rules="inputRules"
+                  dense outlined class="textFieldCustom" color="secondary"
+                  :type="show ? 'text' : 'password'"
+                  :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"  
+                  @click:append="show = !show"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6" class="py-0">
+                <span class="inputTitle">Confirmación de Clave</span>
+                <v-text-field
+                  v-model="usuario.clave1" :rules="inputRules"
+                  dense outlined class="textFieldCustom" color="secondary"
+                  :type="show1 ? 'text' : 'password'"
+                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"  
+                  @click:append="show1 = !show1"
+                ></v-text-field>
               </v-col>
             </v-row>
 
@@ -79,6 +101,8 @@ export default {
       nombre: null,
       correo: null,
       roleId: null,
+      clave: null,
+      clave1: null,
     },
     show: false,
     show1: false,
@@ -122,15 +146,24 @@ export default {
       if (this.$refs.form.validate()) {
         try {
           this.isCreating = true;
-          let response;
           if (this.editable == null) {
-            response = await this.$api.post("api/usuario", this.usuario);
+
+            if(this.usuario.clave.length < 6){
+              this.$toast('error', 'La clave debe tener almenos 6 caracteres');
+
+            } else if(this.usuario.clave != this.usuario.clave1){
+              this.$toast('error', 'Las claves no coinciden');
+
+            }else{
+              await this.$api.post("api/usuario?password="+this.usuario.clave, this.usuario);
+              this.close();
+            }
+
           } else {
-            response = await this.$api.put("api/usuario", this.usuario);
+            await this.$api.put("api/usuario", this.usuario);
+            this.close();
           }
 
-          this.$print(response);
-          this.close();
         } catch (error) {
           this.$print(error);
           let text = "Ocurrió un error";

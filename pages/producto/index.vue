@@ -4,7 +4,7 @@
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
-                Módulo de Productos &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+                Módulo de Productos &nbsp;<v-icon color="primary" class="mb-1">mdi-shape-plus</v-icon>
             </h3>
             <h5 class="text--secondary">
                 Administra todos los productos de tu empresa, puedes añadir uno nuevo o modificar o eliminar alguno existente.
@@ -44,11 +44,12 @@
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
                         <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
-                        <td>{{ item.precio }}</td>
-                        <td>{{ item.impuesto }}</td>
-                        <td>{{ item.id }}</td>
+                        <td align="right">{{ item.precio }}</td>
+                        <td align="right">{{ item.impuesto }}%</td>
+                        <td align="center">{{ item.almacen?.nombre }}</td>
+                        <td align="center">{{ item.existencia }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openProducto(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteProducto(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -78,7 +79,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-facturador",
   
     components: {
       popup
@@ -98,9 +99,10 @@
             headers: [
                 { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Precio", value: "precio", align: "start" },
-                { text: "Impuesto", value: "impuesto", align: "start" },
-                { text: "Almacén", value: "id", align: "start" },
+                { text: "Precio", value: "precio", align: "end", sortable: false },
+                { text: "Impuesto", value: "impuesto", align: "end", sortable: false },
+                { text: "Almacén", value: "almacenId", align: "center", sortable: false },
+                { text: "Existencia", value: "existencia", align: "center" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -151,7 +153,7 @@
         async deleteProducto(producto){
             try{
 
-                let result = await this.$confirm('Va a emilinar un producto', `Está seguro que desea eliminar al producto ${producto.nombre} ${producto.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un producto', `Está seguro que desea eliminar al producto ${producto.nombre}?`)
                 if(result.isConfirmed){
                     await this.$api.put("api/producto/changestatus/"+producto.id );
                     this.getAll();

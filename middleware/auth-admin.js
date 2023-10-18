@@ -10,7 +10,7 @@ export default async function ({ store, redirect, $axios }) {
         store.commit("userManager/setUserDetails", userApi.data);
 
         if(userApi.roleId == 2){
-            redirect('/usuario');
+            zprint('Access granted'); 
         }else{
             redirect('/cliente');
         }

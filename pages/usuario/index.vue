@@ -4,7 +4,7 @@
       <v-row class="px-4">
         <v-col cols="12" sm="5" class="text-left">
             <h3 class="primary--text moduleTitle">
-                Módulo de Usuarios &nbsp;<v-icon color="primary" class="mb-1">mdi-account-group</v-icon>
+                Módulo de Usuarios &nbsp;<v-icon color="primary" class="mb-1">mdi-badge-account</v-icon>
             </h3>
             <h5 class="text--secondary">
                 Administra todos los usuarios de tu empresa, puedes añadir uno nuevo o modificar o eliminar alguno existente.
@@ -44,8 +44,8 @@
                     <tr v-for="item in items" class="puntero" :key="item.departamentoId">
                         <td>{{ item.id }}</td>
                         <td>{{ item.nombre }}</td>
-                        <td>{{ item.correo }}</td>
-                        <td>{{ item.role.name }}</td>
+                        <td align="center">{{ item.correo }}</td>
+                        <td align="center">{{ item.role.name }}</td>
                         <td align="center">
                           <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openUsuario(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
@@ -77,7 +77,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-admin",
   
     components: {
       popup
@@ -97,8 +97,8 @@
             headers: [
                 { text: "Código", value: 'id' },
                 { text: "Nombre", value: "nombre", align: "start" },
-                { text: "Correo", value: "correo", align: "start" },
-                { text: "Rol", value: "roleId", align: "start" },
+                { text: "Correo", value: "correo", align: "center" },
+                { text: "Rol", value: "roleId", align: "center" },
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
@@ -149,7 +149,7 @@
         async deleteUsuario(usuario){
             try{
 
-                let result = await this.$confirm('Va a emilinar un usuario', `Está seguro que desea eliminar al usuario ${usuario.nombre} ${usuario.apellido}?`)
+                let result = await this.$confirm('Va a emilinar un usuario', `Está seguro que desea eliminar al usuario ${usuario.nombre}?`)
                 if(result.isConfirmed){
                     await this.$api.put("api/usuario/changestatus/"+usuario.id );
                     this.getAll();

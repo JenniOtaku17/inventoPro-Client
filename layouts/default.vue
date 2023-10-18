@@ -75,51 +75,61 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
+      user: null,
       items: [
       {
           icon: 'mdi-badge-account',
           title: 'Usuarios',
-          to: '/usuario'
+          to: '/usuario',
+          adminOnly: true,
         },
         {
           icon: 'mdi-account-group',
           title: 'Clientes',
-          to: '/cliente'
+          to: '/cliente',
+          adminOnly: false,
         },
         {
           icon: 'mdi-account-box-multiple',
           title: 'Proveedores',
-          to: '/proveedor'
+          to: '/proveedor',
+          adminOnly: false,
         },
         {
           icon: 'mdi-domain',
           title: 'Almacenes',
-          to: '/almacen'
+          to: '/almacen',
+          adminOnly: true,
         },
         {
           icon: 'mdi-shape-plus',
           title: 'Productos',
-          to: '/producto'
+          to: '/producto',
+          adminOnly: false,
         },
         {
           icon: 'mdi-package-variant-closed-plus',
           title: 'Recepcion',
-          to: '/recepcion'
+          to: '/recepcion',
+          adminOnly: false,
         },
         {
           icon: 'mdi-cash-register',
           title: 'Facturacion',
-          to: '/facturacion'
+          to: '/facturacion',
+          adminOnly: false,
         },
         {
           icon: 'mdi-cash-refund',
           title: 'Devolucion',
-          to: '/devolucion'
+          to: '/devolucion',
+          adminOnly: false,
         },
         {
           icon: 'mdi-file-chart',
           title: 'Reporteria',
-          to: '/reporteria'
+          to: '/reporteria',
+          adminOnly: true,
         },
       ],
       miniVariant: false,
@@ -127,6 +137,8 @@ export default {
     }
   },
   mounted(){
+    this.user = this.$store.state.userManager.userDetails;
+    this.user.roleId != 2? this.items = this.items.filter(x=>x.adminOnly == false): null;
     
   },
   methods: {

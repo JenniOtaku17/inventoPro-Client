@@ -124,7 +124,7 @@
   
   export default {
 
-    middleware: "auth-this",
+    middleware: "auth-admin",
   
     components: {
         balancePrestamos,
