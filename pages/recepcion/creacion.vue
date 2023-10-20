@@ -46,7 +46,7 @@
                                 </td>
                                 <td align="center">
                                     <div class="cantidadDiv">
-                                        <v-btn :disabled="item.cantidad == 1" icon @click="item.cantidad = item.cantidad - 1" color="error">
+                                        <v-btn :disabled="item.cantidad <= 1" icon @click="item.cantidad = item.cantidad - 1" color="error">
                                             <v-icon >mdi-minus</v-icon>
                                         </v-btn>
                                         <v-text-field  v-model="item.cantidad" type="number" hide-details dense outlined class="cantidadInput" :rules="numberRules"></v-text-field>

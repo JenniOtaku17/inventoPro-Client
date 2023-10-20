@@ -9,7 +9,7 @@ export default async function ({ store, redirect, $axios }) {
         let userApi = await $axios.get(`${zconfig.host}/api/usuario/firebaseId/${user.uid}`,{ headers: { Authorization: `Bearer ${token}` } });
         store.commit("userManager/setUserDetails", userApi.data);
 
-        if(userApi.roleId == 2){
+        if(userApi.data.roleId == 2){
             redirect('/usuario');
         }else{
             redirect('/cliente');

@@ -47,7 +47,7 @@
                         <td align="center">{{ item.proveedor?.nombre }}</td>
                         <td align="right"><formatNumber :value="item.total" /></td>
                         <td align="center">
-                            <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                            <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-eye-outline</v-icon></v-btn>
                         </td>
                     </tr>
                   </tbody>
