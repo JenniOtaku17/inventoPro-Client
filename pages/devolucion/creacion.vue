@@ -203,17 +203,20 @@
             if (this.$refs.form.validate()) {
                 try {
                     this.$print(this.devolucion);
+                    let devolucion = await JSON.parse(JSON.stringify(this.devolucion));
                     this.isCreating = true;
-                    if(this.devolucion.total < 0){
+
+                    if(devolucion.total < 0){
                         this.$alert('error', 'Devolución', 'El total no puede ser un valor negativo', null);
 
-                    }else if(this.devolucion.detalles.filter(x=> x.selected && x.cantidad > x.cantidadFacturada).length > 0){
+                    }else if(devolucion.detalles.filter(x=> x.selected && x.cantidad > x.cantidadFacturada).length > 0){
                         this.$alert('error', 'Devolución', 'No puede devolver mas de la cantidad facturada', null);
 
                     }else{
-                        this.devolucion.usuarioId = this.user.id;
-                        await this.devolucion.detalles.map((devolucion)=> { devolucion.id = 0})
-                        let response = await this.$api.post("api/devolucion", this.devolucion.filter(x => x.selected));
+                        devolucion.usuarioId = this.user.id;
+                        await devolucion.detalles.map((producto)=> { producto.id = 0;producto.producto = null})
+                        devolucion.detalles = devolucion.detalles.filter(x => x.selected)
+                        let response = await this.$api.post("api/devolucion", devolucion);
                         this.$print(response);
                     }
 
