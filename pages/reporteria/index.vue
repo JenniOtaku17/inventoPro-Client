@@ -17,7 +17,7 @@
             <span class="inputTitle" >Tipo de Reporte</span>
             <v-select v-model="tipoReporte" dense outlined class="textFieldCustom" color="secondary" :items="reportes" item-text="nombre" item-value="id" append-icon="mdi-chevron-down"></v-select>
         </v-col>
-        <v-col cols="12" md="2" class="py-0" v-if="tipoReporte == 'balancePrestamos'">
+        <v-col cols="12" md="2" class="py-0" v-if="tipoReporte == 'totalVendido' || tipoReporte == 'totalDevolucion'">
             <span class="inputTitle" >Desde</span>
             <v-menu
                 ref="menuDesde"
@@ -55,7 +55,7 @@
                 </v-date-picker>
             </v-menu>
         </v-col>
-        <v-col cols="12" md="2" class="py-0" v-if="tipoReporte == 'balancePrestamos'">
+        <v-col cols="12" md="2" class="py-0" v-if="tipoReporte == 'totalVendido' || tipoReporte == 'totalDevolucion'">
             <span class="inputTitle" >Hasta</span>
             <v-menu
                 ref="menuHasta"
@@ -93,13 +93,9 @@
                 </v-date-picker>
             </v-menu>
         </v-col>
-        <v-col cols="12" md="3" class="py-0" v-if="tipoReporte == 'prestamosCliente'">
-            <span class="inputTitle" >Cliente</span>
-            <v-select v-model="cliente" dense outlined class="textFieldCustom" color="secondary" :items="clientes" :item-text="nombreCompleto" item-value="id" append-icon="mdi-chevron-down"></v-select>
-        </v-col>
-        <v-col cols="12" md="3" class="py-0" v-if="tipoReporte == 'pagosPrestamo'">
-            <span class="inputTitle" >Prestamo</span>
-            <v-select v-model="prestamo" dense outlined class="textFieldCustom" color="secondary" :items="prestamos" :item-text="nombrePrestamo" item-value="prestamoId" append-icon="mdi-chevron-down"></v-select>
+        <v-col cols="12" md="3" class="py-0" v-if="tipoReporte == 'activosAlmacen'">
+            <span class="inputTitle" > Almacen</span>
+            <v-select v-model="almacen" dense outlined class="textFieldCustom" color="secondary" :items="  almacenes" item-text="nombre" item-value="id" append-icon="mdi-chevron-down"></v-select>
         </v-col>
         <v-col cols="12" md="1" class="py-0">
             <v-btn fab elevation="0" :disabled="isLoading" style="border-radius: 50%;" small color="primary white--text" id="generar" @click="getReport()">
@@ -109,33 +105,32 @@
       </v-row>
   
       <div v-if="reporte">
-        <balancePrestamos v-if="tipoReporte == 'balancePrestamos'" :reporte="reporte" :title="title"/>
-        <pagosPrestamo v-if="tipoReporte == 'pagosPrestamo'" :reporte="reporte" :title="title"/>
-        <prestamosCliente v-if="tipoReporte == 'prestamosCliente'" :reporte="reporte" :title="title"/>
+        <totalVendido Almacenes v-if="tipoReporte == 'totalVendido'" :reporte="reporte" :title="title"/>
+        <totalDevolucion Almacene v-if="tipoReporte == 'totalDevolucion'" :reporte="reporte" :title="title"/>
+        <activosAlmacen v-if="tipoReporte == 'activosAlmacen'" :reporte="reporte" :title="title"/>
       </div>
 
     </v-container>
   </template>
   
   <script>
-  import balancePrestamos from "~/components/reportes/balancePrestamos";
-  import pagosPrestamo from "~/components/reportes/pagosPrestamo";
-  import prestamosCliente from "~/components/reportes/prestamosCliente";
+  import totalVendido from "~/components/reportes/totalVendido";
+  import totalDevolucion from "~/components/reportes/totalDevolucion";
+  import activosAlmacen from "~/components/reportes/activosAlmacen";
   
   export default {
 
     middleware: "auth-admin",
   
     components: {
-        balancePrestamos,
-        pagosPrestamo,
-        prestamosCliente
+        totalVendido,
+        totalDevolucion,
+        activosAlmacen
     },
   
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.getClientes();
-        this.getPrestamos();
+        this.getAlmacenes();
     },
 
     watch: {
@@ -152,55 +147,46 @@
             menuDesde: false,
             menuHasta: false,
             reportes: [
-                { id:'balancePrestamos', nombre:'Reporte de Balance de Prestamos'},
-                { id:'pagosPrestamo', nombre:'Reporte de Pagos de un Prestamo'},
-                { id:'prestamosCliente', nombre:'Reporte de Prestamos de un cliente'},
+                { id:'totalVendido', nombre:'Reporte de Total Vendido'},
+                { id:'totalDevolucion', nombre:'Reporte de Total de Devoluciones'},
+                { id:'activosAlmacen', nombre:'Reporte de Activos'},
             ],
-            clientes: [],
-            prestamos: [],
+            almacenes: [],
             tipoReporte: null,
             desde: null,
             hasta: null,
-            cliente: null,
-            prestamo: null,
+            almacen: null,
             reporte: null,
             title: null,
         };
     },
   
     methods: {
-        nombreCompleto: item => item.nombre + ' ' + item.apellido,
-
-        nombrePrestamo: item => item.prestamoId + ' - ' + item.concepto,
 
         async getReport() {
             try{
                 this.isLoading = true;
 
-                if(this.tipoReporte == 'balancePrestamos'){
-                    let data = {
-                        desde: this.desde,
-                        hasta: this.hasta
-                    }
-                    let reporte = await this.$api.post(`api/report/balance_prestamos`, data);
+                if(this.tipoReporte == 'totalVendido'){
+                    let reporte = await this.$api.get(`api/reporte/total_ventas?fechaInicio=${this.desde}&fechaFin=${this.hasta}`);
                     this.reporte = reporte.data;
-                    this.title = `Balance de préstamos desde ${this.formatDate(this.desde,false).replaceAll("/","-")} hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
+                    this.title = `Reporte de ventas desde ${this.formatDate(this.desde,false).replaceAll("/","-")} hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
 
-                }else if(this.tipoReporte == 'pagosPrestamo'){
-                    let reporte = await this.$api.get(`api/report/pagos_prestamos/${this.prestamo}`);
-                    this.reporte = reporte.data?.prestamo?.pagos.filter(x=> x.estado == true);
-                    this.title = `Pagos del préstamo ${reporte.data?.prestamo?.prestamoId}`;
+                }else if(this.tipoReporte == 'totalDevolucion'){
+                    let reporte = await this.$api.get(`api/reporte/total_devoluciones?fechaInicio=${this.desde}&fechaFin=${this.hasta}`);
+                    this.reporte = reporte.data;
+                    this.title = `Reporte de devoluciones desde ${this.formatDate(this.desde,false).replaceAll("/","-")} hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
 
-                }else if(this.tipoReporte == 'prestamosCliente'){
-                    let reporte = await this.$api.get(`api/report/prestamos_cliente/${this.cliente}`);
-                    this.reporte = reporte.data?.cliente?.prestamos;
-                    this.title = `Préstamos de ${reporte.data?.cliente?.nombre} ${reporte.data?.cliente?.apellido}`;
-
+                }else if(this.tipoReporte == 'activosAlmacen'){
+                    let reporte = await this.$api.get(`api/reporte/productos_almacen/${this.almacen}`);
+                    this.reporte = reporte.data;
+                    let almacen = this.almacenes.find(x=>x.id == this.almacen);
+                    this.title = `Reporte de Activos del Almacen ${almacen.nombre}`;
                 }
                 this.$print(this.reporte);
 
             }catch(error){
-                this.$print(error);
+                this.$print(tamoerror);
                 let text = "Ocurrió un error"
                 if(error.response){
                     text = error.response.data.error;
@@ -214,28 +200,12 @@
             
         },
 
-        async getClientes() {
+        async getAlmacenes() {
             try{
                 this.isLoading = true;
-                let clientes = await this.$api.get(`api/cliente`);
-
-                this.clientes = await clientes.data;
-                this.$print(this.clientes);
-                this.isLoading = false;
-
-            }catch(error){
-                this.$print(error)
-            }
-            
-        },
-
-        async getPrestamos() {
-            try{
-                this.isLoading = true;
-                let prestamos = await this.$api.get(`api/prestamo`);
-
-                this.prestamos = await prestamos.data.filter((p)=>p.estado == true);
-                this.$print(this.prestamos);
+                let almacenes = await this.$api.get(`api/almacen`);
+                this.almacenes = await almacenes.data;
+                this.$print(this.almacenes.data);
                 this.isLoading = false;
 
             }catch(error){

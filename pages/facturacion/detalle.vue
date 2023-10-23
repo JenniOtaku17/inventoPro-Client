@@ -1,7 +1,7 @@
 <template>
 
     <v-container class="px-6 py-0 pageFacturacion" v-if="facturacion">
-
+    <link rel="stylesheet" type="text/css" href="print.css">
       <v-row class="">
         <v-col cols="12" sm="5" class="text-left py-0 px-0">
             <h3 class="primary--text moduleTitle">
@@ -12,117 +12,112 @@
             </h3>
         </v-col>
         <v-col cols="12" sm="7" class="text-right pr-11">
+
             <v-btn color="primary" elevation="0" @click="imprimir" :disabled="isLoading">
                 <v-icon left>mdi-printer</v-icon>Imprimir
             </v-btn>
         </v-col>
       </v-row>
 
-      <div style="padding-left:12px;padding-right:12px;" id="element-to-print">
+      <div class="px-6">
+        <div id="element-to-print">
 
-        <v-row style="padding-left:18px;padding-right:18px;">
-            <v-col cols="12" sm="5" class="text-left">
-                <h1 class="moduleTitle" style="margin-bottom:12px;color:#144659;">
-                    Factura &nbsp;No.{{ facturacion.id }}
-                </h1>
-                <div class="facturaDetails"> <b>Cliente No.{{ facturacion.cliente?.id }}</b></div>
-                <div class="facturaDetails"> <b>Nombre:</b> &nbsp;{{ facturacion.cliente?.nombre }}</div>
-                <div class="facturaDetails"> <b>Cédula:</b> &nbsp;{{ facturacion.cliente?.cedula }}</div>
-            </v-col>
-            <v-col cols="12" sm="7" style="text-align:right;margin-top:50px">
-                <div class="facturaDetails">{{ facturacion.almacen?.ubicacion }}</div>
-                <div class="facturaDetails">Facturado por {{ facturacion.usuario?.nombre }}</div>
-                <div class="facturaDetails">{{ formatDate(facturacion.fecha, true) }} </div>
-            </v-col>
-        </v-row>
-    
-        <v-row class="mt-4">
-            <v-col>
-            <v-card flat>
-                <v-card-text>
-                <v-data-table :headers="headers" :items="facturacion.detalles" :loading="isLoading" dense hide-default-footer
-                    loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
-                    :items-per-page="facturacion.detalles.length"
-                >
-                    <template v-slot:body="{ items }" v-if="facturacion.detalles && facturacion.detalles.length > 0">
-                    <tbody>
-                        <tr v-for="item in items" class="puntero" :key="item.id">
-                            <td>{{ item.producto?.nombre }}</td>
-                            <td align="right"><formatNumber :value="item.producto?.precio" /></td>
-                            <td align="center">{{ item.producto?.impuesto }}%</td>
-                            <td align="center">{{ item.descuento }}%</td>
-                            <td align="center">{{ item.cantidad }}</td>
-                            <td align="right"><formatNumber :value="item.total" /></td>
-                        </tr>
-                    </tbody>
-                    </template>
-                </v-data-table>
-                </v-card-text>
-            </v-card>
-            </v-col>
-        </v-row>
+            <h2 class="facturaTitle">
+                Factura &nbsp;No.{{ facturacion.id }}
+            </h2>
 
-        <v-row style="padding-left:18px;padding-right:18px;">
-
-            <v-col cols="12" sm="4" > 
-                <div v-if="facturacion.notas">
-                    <b>Notas: &nbsp;</b>{{ facturacion.notas }}
+            <div class="infoContainer">
+                <div class="cliente">
+                    <div class="facturaDetails"> <b>Cliente No.{{ facturacion.cliente?.id }}</b></div>
+                    <div class="facturaDetails"> <b>Nombre:</b> &nbsp;{{ facturacion.cliente?.nombre }}</div>
+                    <div class="facturaDetails"> <b>Cédula:</b> &nbsp;{{ facturacion.cliente?.cedula }}</div>
                 </div>
-                <div v-else>
-                    No hay notas registradas
+                <div class="empresa">
+                    <div class="facturaDetails">{{ facturacion.almacen?.ubicacion }}</div>
+                    <div class="facturaDetails">Facturado por {{ facturacion.usuario?.nombre }}</div>
+                    <div class="facturaDetails">{{ formatDate(facturacion.fecha, true) }} </div>
                 </div>
-            </v-col>
+            </div>
+        
+            <v-data-table :headers="headers" :items="facturacion.detalles" :loading="isLoading" dense hide-default-footer
+                loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
+                :items-per-page="facturacion.detalles.length"
+            >
+                <template v-slot:body="{ items }" v-if="facturacion.detalles && facturacion.detalles.length > 0">
+                <tbody>
+                    <tr v-for="item in items" class="puntero" :key="item.id">
+                        <td>{{ item.producto?.nombre }}</td>
+                        <td align="right"><formatNumber :value="item.producto?.precio" /></td>
+                        <td align="center">{{ item.producto?.impuesto }}%</td>
+                        <td align="center">{{ item.descuento }}%</td>
+                        <td align="center">{{ item.cantidad }}</td>
+                        <td align="right"><formatNumber :value="item.total" /></td>
+                    </tr>
+                </tbody>
+                </template>
+            </v-data-table>
 
-            <v-spacer></v-spacer>
+            <div class="footerContainer" >
 
-            <v-col cols="12" sm="5" class="text-right">
-                <v-simple-table dense class="custom-table-less-td no-hover">
-                    <template v-slot:default>
-                        <tbody>
-                            <tr>
-                                <td align="left">
-                                    SubTotal
-                                </td>
-                                <td align="right">
-                                    <formatNumber :value="facturacion.subtotal" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">
-                                    Impuestos
-                                </td>
-                                <td align="right">
-                                    <formatNumber :value="facturacion.impuestos" />
-                                </td>
-                            </tr>
-                            <tr class="finalDetail">
-                                <td align="left">
-                                    Descuento
-                                </td>
-                                <td align="right">
-                                    <formatNumber :value="facturacion.descuentos" />
-                                </td>
-                            </tr>
-                            <tr >
-                                <td align="left">
-                                    Total
-                                </td>
-                                <td align="right">
-                                    <formatNumber :value="facturacion.total" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
-            </v-col>
-        </v-row>
+                <div class="notas"> 
+                    <div v-if="facturacion.notas">
+                        <b>Notas: &nbsp;</b>{{ facturacion.notas }}
+                    </div>
+                    <div v-else>
+                        No hay notas registradas
+                    </div>
+                </div>
 
+                <div class="totales">
+                    <v-simple-table dense class="custom-table-less-td no-hover">
+                        <template v-slot:default>
+                            <tbody>
+                                <tr>
+                                    <td align="left">
+                                        SubTotal
+                                    </td>
+                                    <td align="right">
+                                        <formatNumber :value="facturacion.subtotal" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        Impuestos
+                                    </td>
+                                    <td align="right">
+                                        <formatNumber :value="facturacion.impuestos" />
+                                    </td>
+                                </tr>
+                                <tr class="finalDetail">
+                                    <td align="left">
+                                        Descuento
+                                    </td>
+                                    <td align="right">
+                                        <formatNumber :value="facturacion.descuentos" />
+                                    </td>
+                                </tr>
+                                <tr >
+                                    <td align="left">
+                                        Total
+                                    </td>
+                                    <td align="right">
+                                        <formatNumber :value="facturacion.total" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+                </div>
+            </div>
+
+        </div>
       </div>
+
     </v-container>
   </template>
   
   <script>
-  import html2pdf from 'html2pdf.js';
+  import printJS from 'print-js';
   import formatNumber from "~/components/utils/formatNumber";
 
   export default {
@@ -151,6 +146,7 @@
                 { text: "Total", value: "total", align: "end", sortable: false },
             ],
             facturacion: null,
+            url: '',
         };
     },
   
@@ -172,21 +168,17 @@
             
         },
 
-        imprimir(){
+        async imprimir(){
 
             this.isLoading = true;
 
-            let element = document.getElementById('element-to-print');
-            let opt = {
-                margin:       0.2,
-                filename:     `Factura No ${this.facturacion.id}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
+            printJS({
+                printable: 'element-to-print',
+                type: 'html',
+                targetStyles: ['*'],
+                font_size: ''
+            });
             
-            // New Promise-based usage:
-            html2pdf().from(element).set(opt).save();
 
             this.isLoading = false;
         },
@@ -211,7 +203,7 @@
 
     .moduleTitle{
         font-size: 22px;
-        font-weight: 500;
+        font-weight: 700;
     }
 
     .facturaDetails{
@@ -221,6 +213,54 @@
     .finalDetail{
         td{
             border-color: #000!important;
+        }
+    }
+
+    .facturaTitle{
+        padding: 10px 5px;
+        font-size: 22px;
+        color: #144659;
+    }
+
+    .infoContainer{
+        padding: 0px 5px;
+        display: flex;
+        flex-direction: row;
+        width:100%;
+        justify-content: space-between;
+
+        .cliente{
+            width:20%;
+        }
+
+        .empresa{
+            text-align: right;
+            width:40%;
+        }
+    }
+
+    .footerContainer{
+        padding: 30px 5px;
+        display: flex;
+        flex-direction: row;
+        width:100%;
+        justify-content: space-between;
+
+        .notas{
+            width:30%;
+        }
+
+        .totales{
+            text-align: right;
+            width:30%;
+        }
+    }
+
+    .customTable{
+        padding: 30px 0px;
+
+        td{
+            font-size: 14px!important;
         }
     }
   }
