@@ -14,25 +14,24 @@
   
         <v-card flat>
         <v-card-text>
-            <v-data-table :headers="headers" :items="reporte" :loading="isLoading" dense hide-default-footer
+            <v-data-table :headers="headers" :items="reporte.ventas" :loading="isLoading" dense hide-default-footer
             loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
-            :items-per-page="reporte.length"
+            :items-per-page="reporte.ventas.length"
             >
-            <template v-slot:body="{ items }" v-if="reporte && reporte.length > 0">
+            <template v-slot:body="{ items }" v-if="reporte.ventas && reporte.ventas.length > 0">
                 <tbody>
                 <tr v-for="item in items" class="puntero" :key="item.prestamoId">
-                    <td>{{ item.prestamo.prestamoId }}</td>
-                    <td>{{ item.prestamo.concepto }}</td>
-                    <td align="center">{{ formatDate(item.prestamo.fecha, false) }} - {{ formatDate(item.prestamo.fechaFin, false) }}</td>
-                    <td align="end">{{ numberFormat(item.prestamo.monto) }}</td>
-                    <td align="end">{{ item.prestamo.interes }}%</td>
-                    <td align="end">
-                        <span v-if="frecuencias.find(x=> x.frecuenciaId == item.prestamo.frecuenciaInteresId)">
-                            {{ frecuencias.find(x=> x.frecuenciaId == item.prestamo.frecuenciaInteresId).nombre }}
-                        </span>
-                    </td>
-                    <td align="end">{{ numberFormat(item.prestamo.total) }}</td>
-                    <td align="end">{{ numberFormat(item.balance) }}</td>
+                    <td>{{ item.id }}</td>
+                    <td align="center">{{ formatDate(item.fecha, false) }}</td>
+                    <td align="center">{{ item.cliente?.nombre }}</td>
+                    <td align="right"><formatNumber :value="item.subtotal" /></td>
+                    <td align="right"><formatNumber :value="item.descuentos" /></td>
+                    <td align="right"><formatNumber :value="item.impuestos" /></td>
+                    <td align="right"><formatNumber :value="item.total" /></td>
+                </tr>
+                <tr>
+                    <td colspan="6"><b>TOTAL</b></td>
+                    <td align="right"><b><formatNumber :value="reporte.totalVentas" /></b></td>
                 </tr>
                 </tbody>
             </template>
@@ -44,17 +43,21 @@
   
   <script>
   import toExcel from "~/components/utils/toExcel";
+  import formatNumber from "~/components/utils/formatNumber";
   
   export default {
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.getFrecuencias();
     },
 
     props: [
         "reporte",
         "title"
     ],
+
+    components: {
+        formatNumber,
+    },
   
     data() {
         return {
@@ -62,43 +65,18 @@
             user: null,
             frecuencias: [],
             headers: [
-                { text: "Código", value: 'prestamoId' },
-                { text: "Concepto", value: 'concepto' },
-                { text: "Rango de fecha", value: 'fecha', align: 'center' },
-                { text: "Monto", value: 'monto', align: 'end' },
-                { text: "Interés", value: 'interes', align: 'end' },
-                { text: "Frecuencia", value: 'frecuenciaInteresId', align: 'end' },
-                { text: "Total", value: 'total', align: 'end' },
-                { text: "Balance", value: 'balance', align: 'end' },
+                { text: "Código", value: 'id' },
+                { text: "Fecha", value: "fecha", align: "center" },
+                { text: "Cliente", value: "clienteId", align: "center" },
+                { text: "SubTotal", value: "subTotal", align: "end" },
+                { text: "Descuentos", value: "descuentos", align: "end" },
+                { text: "Impuestos", value: "impuestos", align: "end" },
+                { text: "Total", value: "total", align: "end" },
             ],
         };
     },
   
     methods: { 
-        
-        async getFrecuencias() {
-            try{
-                this.isLoading = true;
-                let frecuencias = await this.$api.get(`api/frecuencias`);
-
-                this.frecuencias = await frecuencias.data;
-                this.$print(this.frecuencias);
-                this.isLoading = false;
-
-            }catch(error){
-                this.$print(error)
-            }
-            
-        },
-
-        numberFormat(amount){
-            const formatter = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-            return formatter.format(amount);
-
-        },
 
         formatDate( date, hours){
             return this.$formatDate(date, hours);
@@ -106,41 +84,31 @@
 
         async exportToExcel(){
 
-            const rows = [];
+            const rows = [...this.reporte.ventas];
 
-            await this.reporte.map((item)=>{
-                let frecuencia = this.frecuencias.find(x=> x.frecuenciaId == item.prestamo.frecuenciaInteresId);
-                rows.push({
-                    prestamoId: item.prestamo.prestamoId,
-                    concepto: item.prestamo.concepto,
-                    fecha: this.formatDate(item.prestamo.fecha, false),
-                    fechaFin: this.formatDate(item.prestamo.fechaFin, false),
-                    monto: item.prestamo.monto,
-                    interes: item.prestamo.interes,
-                    frecuencia: frecuencia.nombre,
-                    total: item.prestamo.total,
-                    balance: item.balance
-                })
+            await rows.map((item)=>{
+                item.fechaText = this.formatDate(item.fecha, false);
+                item.clienteNombre = item.cliente?.nombre;
             })
 
+            rows.push({total: this.reporte.totalVentas})
+
             let data = {
-                encabezados: ['Código','Concepto', 'Fecha de Inicio', 'Fecha de Finalización', 'Monto', 'Interés', 'Frecuencia', 'Total', 'Balance'],
+                encabezados: ['Código','Fecha', 'Cliente', 'Subtotal', 'Descuentos', 'Impuestos', 'Total'],
                 columnas: [
-                    { key: "prestamoId", width:10 },
-                    { key: "concepto", width:40 },
-                    { key: "fecha", width:30 },
-                    { key: "fechaFin", width:30 },
-                    { key: "monto", width:20 },
-                    { key: "interes", width:15 },
-                    { key: "frecuencia", width:20 },
+                    { key: "id", width:10 },
+                    { key: "fechaText", width:30 },
+                    { key: "clienteNombre", width:40 },
+                    { key: "subtotal", width:20 },
+                    { key: "descuentos", width:20 },
+                    { key: "impuestos", width:20 },
                     { key: "total", width:20 },
-                    { key: "balance", width:20 }
                 ],
-                columnasNumber: [5,8,9],
+                columnasNumber: [4,5,6,7],
                 rows: rows
             }
 
-            toExcel(this.title, data, false);
+            toExcel(this.title, data, true);
             },
         },
   };

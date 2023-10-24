@@ -13,38 +13,51 @@
         </v-row>
   
         <v-card flat>
-            <v-card-text>
-                <v-data-table :headers="headers" :items="reporte" :loading="isLoading" dense hide-default-footer
-                    loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados" :items-per-page="reporte.length"
-                >
-                    <template v-slot:body="{ items }" v-if="reporte && reporte.length > 0">
-                    <tbody>
-                        <tr v-for="item in items" class="puntero" :key="item.pagoId">
-                            <td>{{ item.pagoId }}</td>
-                            <td align="end">{{ numberFormat(item.monto) }}</td>
-                            <td align="center">{{ formatDate(item.fc, false) }}</td>
-                        </tr>
-                    </tbody>
-                    </template>
-                </v-data-table>
-            </v-card-text>
+        <v-card-text>
+            <v-data-table :headers="headers" :items="reporte.devolucion" :loading="isLoading" dense hide-default-footer
+            loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
+            :items-per-page="reporte.devolucion.length"
+            >
+            <template v-slot:body="{ items }" v-if="reporte.devolucion && reporte.devolucion.length > 0">
+                <tbody>
+                <tr v-for="item in items" class="puntero" :key="item.prestamoId">
+                    <td>{{ item.id }}</td>
+                    <td align="center">{{ formatDate(item.fecha, false) }}</td>
+                    <td align="center">{{ item.facturaId }}</td>
+                    <td align="right"><formatNumber :value="item.subtotal" /></td>
+                    <td align="right"><formatNumber :value="item.descuentos" /></td>
+                    <td align="right"><formatNumber :value="item.impuestos" /></td>
+                    <td align="right"><formatNumber :value="item.total" /></td>
+                </tr>
+                <tr>
+                    <td colspan="6"><b>TOTAL</b></td>
+                    <td align="right"><b><formatNumber :value="reporte.totalDevolucion" /></b></td>
+                </tr>
+                </tbody>
+            </template>
+            </v-data-table>
+        </v-card-text>
         </v-card>
     </v-container>
   </template>
   
   <script>
   import toExcel from "~/components/utils/toExcel";
+  import formatNumber from "~/components/utils/formatNumber";
   
   export default {
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.$print("here??");
     },
 
     props: [
         "reporte",
         "title"
     ],
+
+    components: {
+        formatNumber,
+    },
   
     data() {
         return {
@@ -52,23 +65,18 @@
             user: null,
             frecuencias: [],
             headers: [
-                { text: "Código", value: 'pagoId' },
-                { text: "Monto", value: "monto", align: 'end' },
-                { text: "Fecha", value: "fc", align: 'center' }
+                { text: "Código", value: 'id' },
+                { text: "Fecha", value: "fecha", align: "center" },
+                { text: "Código Factura", value: "facturaId", align: "center" },
+                { text: "SubTotal", value: "subTotal", align: "end" },
+                { text: "Descuentos", value: "descuentos", align: "end" },
+                { text: "Impuestos", value: "impuestos", align: "end" },
+                { text: "Total", value: "total", align: "end" },
             ],
         };
     },
   
     methods: { 
-
-        numberFormat(amount){
-            const formatter = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-            return formatter.format(amount);
-
-        },
 
         formatDate( date, hours){
             return this.$formatDate(date, hours);
@@ -76,28 +84,31 @@
 
         async exportToExcel(){
 
-            const rows = [];
+            const rows = [...this.reporte.devolucion];
 
-            await this.reporte.map((item)=>{
-                rows.push({
-                    pagoId: item.pagoId,
-                    fecha: this.formatDate(item.fc, false),
-                    monto: item.monto,
-                })
+            await rows.map((item)=>{
+                item.fechaText = this.formatDate(item.fecha, false);
+                item.clienteNombre = item.cliente?.nombre;
             })
 
+            rows.push({total: this.reporte.totalDevolucion})
+
             let data = {
-                encabezados: ['Código','Monto', 'Fecha de Inicio'],
+                encabezados: ['Código','Fecha', 'Código Factura', 'Subtotal', 'Descuentos', 'Impuestos', 'Total'],
                 columnas: [
-                    { key: "pagoId", width:10 },
-                    { key: "monto", width:20 },
-                    { key: "fecha", width:30 }
+                    { key: "id", width:10 },
+                    { key: "fechaText", width:30 },
+                    { key: "facturaId", width:40 },
+                    { key: "subtotal", width:20 },
+                    { key: "descuentos", width:20 },
+                    { key: "impuestos", width:20 },
+                    { key: "total", width:20 },
                 ],
-                columnasNumber: [2],
+                columnasNumber: [4,5,6,7],
                 rows: rows
             }
 
-            toExcel(this.title, data, false);
+            toExcel(this.title, data, true);
             },
         },
   };
