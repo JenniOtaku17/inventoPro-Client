@@ -8,7 +8,42 @@
           <v-btn icon @click="clean"><v-icon>mdi-close</v-icon></v-btn>
         </v-card-title>
         <v-card-text class="pt-4 pb-9 px-10">
-          <v-form ref="form">
+          <div v-if="verDetalles">
+            <v-row>
+              <v-col cols="12" md="12" class="py-0">
+                <span class="inputTitle">Nombre: </span>
+                <span class="inputTitle">{{usuario.nombre}}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="6" class="py-0" >
+                <span class="inputTitle">Correo: </span>
+                <span class="inputTitle">{{usuario.correo}}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="6" class="py-0">
+                <span class="inputTitle">Rol: </span>
+                <span class="inputTitle">{{usuario.role.name}}</span>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" md="12" sm="12" justify="end" align="end">
+                <v-btn
+                  class="white--text"
+                  :disabled="isCreating"
+                  color="primary"
+                  elevation="0"
+                  @click="clean"
+                >
+                  Cerrar
+                </v-btn>
+              </v-col>
+            </v-row>
+          </div>
+          
+          <v-form ref="form" v-else>
             <v-row>
               <v-col cols="12" md="12" class="py-0">
                 <span class="inputTitle">Nombre</span>
@@ -88,6 +123,7 @@
               </v-col>
             </v-row>
           </v-form>
+
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -95,12 +131,13 @@
 </template>
 <script>
 export default {
-  props: ["activador", "editable"],
+  props: ["activador", "editable", "verDetalles"],
   data: () => ({
     usuario: {
       nombre: null,
       correo: null,
       roleId: null,
+      role: null,
       clave: null,
       clave1: null,
     },
@@ -118,8 +155,11 @@ export default {
   }),
   async mounted() {
     if (this.editable) {
-      this.title = "Editar usuario";
       this.usuario = this.editable;
+      this.title = "Editar usuario";
+      if(this.verDetalles){
+      this.title = "Detalles del usuario";
+      }
     }
     this.mounted = true;
   },

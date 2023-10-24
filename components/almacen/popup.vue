@@ -8,7 +8,38 @@
                 <v-btn icon @click="clean"><v-icon>mdi-close</v-icon></v-btn>
             </v-card-title>
             <v-card-text class="pt-4 pb-9 px-10">
-                <v-form ref="form">
+                <div ref="form" v-if="verDetalles">
+                    <v-row>
+                        <v-col cols="12" md="6" class="py-0">
+                            <span class="inputTitle" >Nombre: </span>
+                            <span >{{almacen.nombre}}</span>
+                           
+                        </v-col>
+                        <v-col cols="12" md="6" class="py-0">
+                            <span class="inputTitle" >Cacapidad: </span>
+                            <span>{{almacen.capacidad}}</span>
+                        </v-col>
+                    </v-row>
+                    <v-row >
+                        <v-col cols="12" md="6" class="py-0">
+                            <span class="inputTitle" >Ubicación: </span>
+                            <span>{{almacen.ubicacion}}</span>
+                        </v-col>
+                        <v-col cols="12" md="6" class="py-0">
+                            <span class="inputTitle" >Descripción</span>
+                            <span>{{almacen.descripcion}}</span>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" md="12" sm="12" justify="end" align="end">
+                            <v-btn class="white--text" :disabled="isCreating" color="primary" elevation="0" @click="clean">
+                                Cerrar
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </div>
+                <v-form ref="form" v-else>
                     <v-row>
                         <v-col cols="12" md="6" class="py-0">
                             <span class="inputTitle" >Nombre</span>
@@ -48,7 +79,8 @@
   export default {
     props: [
         "activador",
-        "editable"
+        "editable", 
+        "verDetalles"
     ],
     data: () => ({
         almacen: {

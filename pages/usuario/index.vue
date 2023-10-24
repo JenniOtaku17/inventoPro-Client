@@ -47,7 +47,7 @@
                         <td align="center">{{ item.correo }}</td>
                         <td align="center">{{ item.role.name }}</td>
                         <td align="center">
-                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(item.id)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
+                          <v-btn class="elevation-0" color="primary" icon small @click="verDetalle(true, item)"><v-icon>mdi-account-eye-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="secondary" icon small @click="openUsuario(true, item)"><v-icon>mdi-pencil-circle-outline</v-icon></v-btn>
                           <v-btn class="elevation-0" color="error" icon small @click="deleteUsuario(item)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
                         </td>
@@ -68,7 +68,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <popup v-if="dialog" :activador="dialog" @actualizar="actualizar" :editable="editable" />
+      <popup v-if="dialog" :activador="dialog" @actualizar="actualizar" :editable="editable" :verDetalles='verDetalles' />
     </v-container>
   </template>
   
@@ -102,6 +102,7 @@
                 { text: "Acciones", align:'center', sortable: false }
             ],
             dialog: false,
+            verDetalles: false,
             editable: null,
             itemsPerPage: 5,
             page: 1,
@@ -127,8 +128,13 @@
             
         },
 
-        verDetalle( id ){
-            this.$router.push({ path: '/usuario/detalle', query: { id } })
+        verDetalle( toDetails, obj ){
+            // this.$router.push({ path: '/usuario/detalle', query: { id } })
+            if(toDetails){
+                this.editable = obj;
+                this.verDetalles = true
+            }
+            this.dialog = true;
         },
     
         openUsuario( toEdit, obj){
@@ -143,6 +149,7 @@
                 this.getAll();
             }
             this.dialog = false;
+            this.verDetalles = false
             this.editable = null;
         },
     
