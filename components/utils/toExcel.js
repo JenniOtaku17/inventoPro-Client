@@ -45,7 +45,7 @@ async function toExcel( filename, data, total){
         }): null;
 
         if(total == true){
-            let lastRow = parseInt(data.rows.length) + 3;
+            let lastRow = parseInt(data.rows.length) + 4;
             worksheet.getRow(lastRow).font = {
                 bold: true,
             };

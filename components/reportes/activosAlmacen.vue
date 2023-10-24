@@ -21,17 +21,13 @@
             <template v-slot:body="{ items }" v-if="reporte && reporte.length > 0">
                 <tbody>
                 <tr v-for="item in items" class="puntero" :key="item.prestamoId">
-                    <td>{{ item.prestamoId }}</td>
-                    <td>{{ item.concepto }}</td>
-                    <td align="center">{{ formatDate(item.fecha, false) }} - {{ formatDate(item.fechaFin, false) }}</td>
-                    <td align="end">{{ numberFormat(item.monto) }}</td>
-                    <td align="end">{{ item.interes }}%</td>
-                    <td align="end">
-                        <span v-if="frecuencias.find(x=> x.frecuenciaId == item.frecuenciaInteresId)">
-                            {{ frecuencias.find(x=> x.frecuenciaId == item.frecuenciaInteresId).nombre }}
-                        </span>
-                    </td>
-                    <td align="end">{{ numberFormat(item.total) }}</td>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.nombre }}</td>
+                    <td align="right">{{ item.precio }}</td>
+                    <td align="right">{{ item.impuesto }}%</td>
+                    <td align="center">{{ item.existencia }}</td>
+                    <td>{{ item.codigoBarra }}</td>
+                    <td>{{ item.unidad }}</td>
                 </tr>
                 </tbody>
             </template>
@@ -43,18 +39,21 @@
   
   <script>
   import toExcel from "~/components/utils/toExcel";
+  import formatNumber from "~/components/utils/formatNumber";
   
   export default {
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.$print("here?")
-        this.getFrecuencias();
     },
 
     props: [
         "reporte",
         "title"
     ],
+
+    components: {
+        formatNumber,
+    },
   
     data() {
         return {
@@ -62,78 +61,39 @@
             user: null,
             frecuencias: [],
             headers: [
-                { text: "Código", value: 'prestamoId' },
-                { text: "Concepto", value: 'concepto' },
-                { text: "Rango de fecha", value: 'fecha', align: 'center' },
-                { text: "Monto", value: 'monto', align: 'end' },
-                { text: "Interés", value: 'interes', align: 'end' },
-                { text: "Frecuencia", value: 'frecuenciaInteresId', align: 'end' },
-                { text: "Total", value: 'total', align: 'end' },
+                { text: "Código", value: 'id' },
+                { text: "Nombre", value: "nombre", align: "start" },
+                { text: "Precio", value: "precio", align: "end", sortable: false },
+                { text: "Impuesto", value: "impuesto", align: "end", sortable: false },
+                { text: "Existencia", value: "existencia", align: "center" },
+                { text: "Código de Barra", value: 'codigoBarra' },
+                { text: "Unidad", value: 'unidad' },
             ],
         };
     },
   
     methods: { 
-        
-        async getFrecuencias() {
-            try{
-                this.isLoading = true;
-                let frecuencias = await this.$api.get(`api/frecuencias`);
-
-                this.frecuencias = await frecuencias.data;
-                this.$print(this.frecuencias);
-                this.isLoading = false;
-
-            }catch(error){
-                this.$print(error)
-            }
-            
-        },
-
-        numberFormat(amount){
-            const formatter = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-            return formatter.format(amount);
-
-        },
-
-        formatDate( date, hours){
-            return this.$formatDate(date, hours);
-        },
 
         async exportToExcel(){
 
-            const rows = [];
+            const rows = [...this.reporte];
 
-            await this.reporte.map((item)=>{
-                let frecuencia = this.frecuencias.find(x=> x.frecuenciaId == item.frecuenciaInteresId);
-                rows.push({
-                    prestamoId: item.prestamoId,
-                    concepto: item.concepto,
-                    fecha: this.formatDate(item.fecha, false),
-                    fechaFin: this.formatDate(item.fechaFin, false),
-                    monto: item.monto,
-                    interes: item.interes,
-                    frecuencia: frecuencia.nombre,
-                    total: item.total,
-                })
+            await rows.map((item)=>{
+                item.impuestoText = item.impuesto+'%';
             })
 
             let data = {
-                encabezados: ['Código','Concepto', 'Fecha de Inicio', 'Fecha de Finalización', 'Monto', 'Interés', 'Frecuencia', 'Total'],
+                encabezados: ['Código', 'Nombre','Precio', 'Impuesto', 'Existencia', 'Código de Barra', 'Unidad'],
                 columnas: [
-                    { key: "prestamoId", width:10 },
-                    { key: "concepto", width:40 },
-                    { key: "fecha", width:30 },
-                    { key: "fechaFin", width:30 },
-                    { key: "monto", width:20 },
-                    { key: "interes", width:15 },
-                    { key: "frecuencia", width:20 },
-                    { key: "total", width:20 },
+                    { key: "id", width:10 },
+                    { key: "nombre", width:30 },
+                    { key: "precio", width:20 },
+                    { key: "impuestoText", width:20 },
+                    { key: "existencia", width:20 },
+                    { key: "codigoBarra", width:20 },
+                    { key: "unidad", width:30 },
                 ],
-                columnasNumber: [5,8],
+                columnasNumber: [3,5],
                 rows: rows
             }
 
