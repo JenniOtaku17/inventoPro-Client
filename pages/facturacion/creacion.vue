@@ -154,6 +154,7 @@
   
     data() {
         return {
+            isNew: false,
             isLoading: false,
             almacenes: [],
             productos: [],
@@ -277,18 +278,23 @@
         },
 
         async guardar(){
+            //testing
+            this.isNew = true;
+            this.$router.push({ path: '/facturacion/detalle', query: { id: 6, isNew: this.isNew } });
+            return;
             if (this.$refs.form.validate()) {
                 try {
                     this.$print(this.facturacion);
-                    this.isCreating = true;
+                    this.isNew = true;
                     if(this.facturacion.total < 0){
                         this.$alert('error', 'Facturación', 'El total no puede ser un valor negativo', null);
 
                     }else{
                         this.facturacion.usuarioId = this.user.id;
-                        await this.facturacion.detalles.map((facturacion)=> { facturacion.id = 0})
+                        await this.facturacion.detalles.map((facturacion)=> { facturacion.id = 0});
                         let response = await this.$api.post("api/factura", this.facturacion);
                         this.$print(response);
+                        
                     }
 
                 } catch (error) {
@@ -300,7 +306,7 @@
                     this.$alert("error", "Facturación", text, 3000);
 
                 } finally {
-                    this.isCreating = false;
+                    this.isNew = false;
                 }
             }
         }
