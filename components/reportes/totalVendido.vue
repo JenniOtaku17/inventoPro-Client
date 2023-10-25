@@ -12,32 +12,29 @@
             </v-col>
         </v-row>
   
-        <v-card flat>
-        <v-card-text>
-            <v-data-table :headers="headers" :items="reporte.ventas" :loading="isLoading" dense hide-default-footer
-            loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
-            :items-per-page="reporte.ventas.length"
-            >
-            <template v-slot:body="{ items }" v-if="reporte.ventas && reporte.ventas.length > 0">
-                <tbody>
-                <tr v-for="item in items" class="puntero" :key="item.prestamoId">
-                    <td>{{ item.id }}</td>
-                    <td align="center">{{ formatDate(item.fecha, false) }}</td>
-                    <td align="center">{{ item.cliente?.nombre }}</td>
-                    <td align="right"><formatNumber :value="item.subtotal" /></td>
-                    <td align="right"><formatNumber :value="item.descuentos" /></td>
-                    <td align="right"><formatNumber :value="item.impuestos" /></td>
-                    <td align="right"><formatNumber :value="item.total" /></td>
-                </tr>
-                <tr>
-                    <td colspan="6"><b>TOTAL</b></td>
-                    <td align="right"><b><formatNumber :value="reporte.totalVentas" /></b></td>
-                </tr>
-                </tbody>
-            </template>
-            </v-data-table>
-        </v-card-text>
-        </v-card>
+        <v-data-table :headers="headers" :items="reporte.ventas" :loading="isLoading" dense hide-default-footer
+        loading-text="Buscando registros..." class="customTable mx-4" no-data-text="No se han encontrado resultados"
+        :items-per-page="reporte.ventas.length"
+        >
+        <template v-slot:body="{ items }" v-if="reporte.ventas && reporte.ventas.length > 0">
+            <tbody>
+            <tr v-for="item in items" class="puntero" :key="item.prestamoId">
+                <td>{{ item.id }}</td>
+                <td align="center">{{ formatDate(item.fecha, false) }}</td>
+                <td align="center">{{ item.cliente?.nombre }}</td>
+                <td align="right"><formatNumber :value="item.subtotal" /></td>
+                <td align="right"><formatNumber :value="item.descuentos" /></td>
+                <td align="right"><formatNumber :value="item.impuestos" /></td>
+                <td align="right"><formatNumber :value="item.total" /></td>
+            </tr>
+            <tr>
+                <td colspan="6"><b>TOTAL</b></td>
+                <td align="right"><b><formatNumber :value="reporte.totalVentas" /></b></td>
+            </tr>
+            </tbody>
+        </template>
+        </v-data-table>
+        
     </v-container>
   </template>
   
