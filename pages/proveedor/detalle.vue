@@ -119,7 +119,6 @@
                 let proveedor = await this.$api.get(`api/proveedor/${id}`);
 
                 this.proveedor = await proveedor.data;
-                this.prestamos = await proveedor.data.prestamos.filter((p)=>p.estado == true);
 
                 this.$print(this.proveedor);
                 this.isLoading = false;

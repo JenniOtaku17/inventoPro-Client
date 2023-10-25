@@ -119,7 +119,6 @@
                 let cliente = await this.$api.get(`api/cliente/${id}`);
 
                 this.cliente = await cliente.data;
-                this.prestamos = await cliente.data.prestamos.filter((p)=>p.estado == true);
 
                 this.$print(this.cliente);
                 this.isLoading = false;

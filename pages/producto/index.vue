@@ -114,6 +114,7 @@
     },
   
     methods: {
+        
         async getAll() {
             try{
                 this.isLoading = true;
