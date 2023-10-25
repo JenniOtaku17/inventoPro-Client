@@ -122,13 +122,12 @@
         async getAll() {
             try{
                 this.isLoading = true;
+
                 let id = this.$route.query.id;
                 let producto = await this.$api.get(`api/producto/${id}`);
-
                 this.producto = await producto.data;
-                this.prestamos = await producto.data.prestamos.filter((p)=>p.estado == true);
-
                 this.$print(this.producto);
+                
                 this.isLoading = false;
 
             }catch(error){
