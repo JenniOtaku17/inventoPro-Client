@@ -214,7 +214,7 @@
 
                     }else{
                         devolucion.usuarioId = this.user.id;
-                        await devolucion.detalles.map((producto)=> { producto.id = 0;producto.producto = null})
+                        await devolucion.detalles.map((producto)=> { producto.id = 0;producto.producto = null; producto.facturaId = devolucion.facturaId;})
                         devolucion.detalles = devolucion.detalles.filter(x => x.selected)
                         let response = await this.$api.post("api/devolucion", devolucion);
                         this.$print(response);
@@ -224,9 +224,9 @@
                     this.$print(error);
                     let text = "Ocurrió un error";
                     if (error.response) {
-                        text = error.response.data.error;
+                        text = error.response.data.mensaje;
                     }
-                    this.$alert("error", "Devolución", text, 3000);
+                    this.$alert("error", "Devolución", text, null);
 
                 } finally {
                     this.isCreating = false;

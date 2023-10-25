@@ -12,28 +12,25 @@
             </v-col>
         </v-row>
   
-        <v-card flat>
-        <v-card-text>
-            <v-data-table :headers="headers" :items="reporte" :loading="isLoading" dense hide-default-footer
-            loading-text="Buscando registros..." class="customTable" no-data-text="No se han encontrado resultados"
-            :items-per-page="reporte.length"
-            >
-            <template v-slot:body="{ items }" v-if="reporte && reporte.length > 0">
-                <tbody>
-                <tr v-for="item in items" class="puntero" :key="item.prestamoId">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.nombre }}</td>
-                    <td align="right">{{ item.precio }}</td>
-                    <td align="right">{{ item.impuesto }}%</td>
-                    <td align="center">{{ item.existencia }}</td>
-                    <td>{{ item.codigoBarra }}</td>
-                    <td>{{ item.unidad }}</td>
-                </tr>
-                </tbody>
-            </template>
-            </v-data-table>
-        </v-card-text>
-        </v-card>
+        <v-data-table :headers="headers" :items="reporte" :loading="isLoading" dense hide-default-footer
+        loading-text="Buscando registros..." class="customTable mx-4" no-data-text="No se han encontrado resultados"
+        :items-per-page="reporte.length"
+        >
+        <template v-slot:body="{ items }" v-if="reporte && reporte.length > 0">
+            <tbody>
+            <tr v-for="item in items" class="puntero" :key="item.prestamoId">
+                <td>{{ item.id }}</td>
+                <td>{{ item.nombre }}</td>
+                <td align="right">{{ item.precio }}</td>
+                <td align="right">{{ item.impuesto }}%</td>
+                <td align="center">{{ item.existencia }}</td>
+                <td>{{ item.codigoBarra }}</td>
+                <td>{{ item.unidad }}</td>
+            </tr>
+            </tbody>
+        </template>
+        </v-data-table>
+
     </v-container>
   </template>
   

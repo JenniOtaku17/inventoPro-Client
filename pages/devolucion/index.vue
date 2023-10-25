@@ -43,7 +43,7 @@
                   <tbody>
                     <tr v-for="item in items" class="puntero" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td align="center">{{ formatDate(item.fecha, false) }}</td>
+                        <td align="center"><span v-if="item.fecha">{{ formatDate(item.fecha, false) }}</span></td>
                         <td align="center">{{ item.factura?.id }}</td>
                         <td align="right"><formatNumber :value="item.subtotal" /></td>
                         <td align="right"><formatNumber :value="item.descuentos" /></td>
