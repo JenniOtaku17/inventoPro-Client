@@ -126,7 +126,11 @@
   
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.getAll();
+        await this.getAll();
+        
+        if(this.$route.query.isCreating === 'true'){
+            this.imprimir();
+        }
     },
 
     components: {
@@ -160,6 +164,12 @@
                 this.facturacion = await facturacion.data;
                 this.$print(this.facturacion);
 
+                    if(this.$route?.query?.isNew) {
+                        this.$print(this.$route?.query?.isNew)
+                        this.imprimir();
+                    }
+                
+                
                 this.isLoading = false;
 
             }catch(error){
