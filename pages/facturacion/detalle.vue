@@ -267,7 +267,7 @@
     }
 
     .customTable{
-        padding: 30px 0px;
+        margin: 30px 0px;
 
         td{
             font-size: 14px!important;

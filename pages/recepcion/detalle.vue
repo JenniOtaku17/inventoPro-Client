@@ -34,7 +34,7 @@
                 </div>
                 <div class="empresa">
                     <div class="recepcionDetails">{{ recepcion.almacen?.ubicacion }}</div>
-                    <div class="recepcionDetails">Manejado por {{ recepcion.usuario?.nombre }}</div>
+                    <div class="recepcionDetails">Atendido por {{ recepcion.usuario?.nombre }}</div>
                     <div class="recepcionDetails">{{ formatDate(recepcion.fecha, true) }} </div>
                 </div>
             </div>
@@ -261,7 +261,7 @@
     }
 
     .customTable{
-        padding: 30px 0px;
+        margin: 30px 0px;
 
         td{
             font-size: 14px!important;

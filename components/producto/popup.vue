@@ -2,7 +2,7 @@
     <div v-if="mounted">
       <v-dialog v-model="activador" width="600" persistent>
         <v-card class="productoPopup">
-            <v-card-title>
+            <v-card-title class="px-10">
                 <h3 class="primary--text">{{title}}</h3>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="clean"><v-icon>mdi-close</v-icon></v-btn>

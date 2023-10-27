@@ -2,7 +2,7 @@
   <div v-if="mounted">
     <v-dialog v-model="activador" width="600" persistent>
       <v-card class="usuarioPopup">
-        <v-card-title>
+        <v-card-title class="px-10">
           <h3 class="primary--text">{{ title }}</h3>
           <v-spacer></v-spacer>
           <v-btn icon @click="clean"><v-icon>mdi-close</v-icon></v-btn>
@@ -10,20 +10,20 @@
         <v-card-text class="pt-4 pb-9 px-10">
           <div v-if="verDetalles">
             <v-row>
-              <v-col cols="12" md="12" class="py-0">
-                <span class="inputTitle">Nombre: </span>
+              <v-col cols="12" md="12" class="py-2">
+                <span class="inputTitle"><b>Nombre: </b></span>
                 <span class="inputTitle">{{usuario.nombre}}</span>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" md="6" class="py-0" >
-                <span class="inputTitle">Correo: </span>
+              <v-col cols="12" md="6" class="py-2" >
+                <span class="inputTitle"><b>Correo: </b></span>
                 <span class="inputTitle">{{usuario.correo}}</span>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" md="6" class="py-0">
-                <span class="inputTitle">Rol: </span>
+              <v-col cols="12" md="6" class="py-2">
+                <span class="inputTitle"><b>Rol: </b></span>
                 <span class="inputTitle">{{usuario.role.name}}</span>
               </v-col>
             </v-row>
@@ -156,9 +156,10 @@ export default {
   async mounted() {
     if (this.editable) {
       this.usuario = this.editable;
-      this.title = "Editar usuario";
       if(this.verDetalles){
-      this.title = "Detalles del usuario";
+          this.title = "Visualización de usuario";
+      }else{
+          this.title = "Editar usuario";
       }
     }
     this.mounted = true;

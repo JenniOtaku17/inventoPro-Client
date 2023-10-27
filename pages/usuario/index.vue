@@ -19,7 +19,6 @@
   
       <v-row class="mt-4">
         <v-col>
-          <v-card flat>
             <v-row class="px-4">
                 <v-col cols="12" sm="8">
                 </v-col>
@@ -65,7 +64,6 @@
                     :total-visible="6"
                 ></v-pagination>
             </v-row>
-          </v-card>
         </v-col>
       </v-row>
       <popup v-if="dialog" :activador="dialog" @actualizar="actualizar" :editable="editable" :verDetalles='verDetalles' />

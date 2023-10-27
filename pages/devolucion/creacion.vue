@@ -219,7 +219,11 @@
 
                     }else{
                         devolucion.usuarioId = this.user.id;
-                        await devolucion.detalles.map((producto)=> { producto.id = 0;producto.producto = null; producto.facturaId = devolucion.facturaId;})
+                        await devolucion.detalles.map((producto)=> { 
+                            producto.id = 0;
+                            producto.producto = null;
+                            producto.facturaId = devolucion.facturaId;
+                        });
                         devolucion.detalles = devolucion.detalles.filter(x => x.selected)
                         let response = await this.$api.post("api/devolucion", devolucion);
                         this.verDetalle(response.data.id);
@@ -260,7 +264,8 @@
 
             let result = this.devolucion.detalles.filter(x=> x.selected) ? this.devolucion.detalles.filter(x=> x.selected).reduce((total, product) => {
 
-                let impuesto = (this.parse(product.producto?.precio) - (this.parse(product.descuento) / 100) * this.parse(product.producto?.precio)) * (product.producto?.impuesto / 100);
+                let impuesto = (this.parse(product.producto?.precio) - (this.parse(product.descuento) / 100) 
+                * this.parse(product.producto?.precio)) * (product.producto?.impuesto / 100);
                 return total + (impuesto * product.cantidad);
 
             }, 0) : 0;

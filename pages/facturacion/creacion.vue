@@ -173,8 +173,7 @@
                 v => !!v || '',
             ],
             numberRules: [
-                v => !!v || '',
-                v => v > 0 || ''
+                v => v >= 0 || ''
             ],
             facturacion: {
                 almacenId: null,
@@ -283,10 +282,6 @@
         },
 
         async guardar(){
-            //testing
-            this.isNew = true;
-            this.$router.push({ path: '/facturacion/detalle', query: { id: 6, isNew: this.isNew } });
-            return;
             if (this.$refs.form.validate()) {
                 try {
                     this.$print(this.facturacion);
@@ -337,7 +332,8 @@
 
             let result = this.facturacion.detalles ? this.facturacion.detalles.reduce((total, product) => {
 
-                let impuesto = (this.parse(product.precio) - (this.parse(product.descuento) / 100) * this.parse(product.precio)) * (product.impuesto / 100);
+                let impuesto = (this.parse(product.precio) - (this.parse(product.descuento) / 100) 
+                                * this.parse(product.precio)) * (product.impuesto / 100);
                 return total + (impuesto * product.cantidad);
 
             }, 0) : 0;

@@ -170,12 +170,14 @@
                 if(this.tipoReporte == 'totalVendido'){
                     let reporte = await this.$api.get(`api/reporte/total_ventas?fechaInicio=${this.desde}&fechaFin=${this.hasta}`);
                     this.reporte = reporte.data;
-                    this.title = `Reporte de ventas desde ${this.formatDate(this.desde,false).replaceAll("/","-")} hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
+                    this.title = `Reporte de ventas desde ${this.formatDate(this.desde,false).replaceAll("/","-")}
+                    hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
 
                 }else if(this.tipoReporte == 'totalDevolucion'){
                     let reporte = await this.$api.get(`api/reporte/total_devoluciones?fechaInicio=${this.desde}&fechaFin=${this.hasta}`);
                     this.reporte = reporte.data;
-                    this.title = `Reporte de devoluciones desde ${this.formatDate(this.desde,false).replaceAll("/","-")} hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
+                    this.title = `Reporte de devoluciones desde ${this.formatDate(this.desde,false).replaceAll("/","-")}
+                     hasta ${this.formatDate(this.hasta,false).replaceAll("/","-")}`;
 
                 }else if(this.tipoReporte == 'activosAlmacen'){
                     let reporte = await this.$api.get(`api/reporte/productos_almacen/${this.almacen}`);
