@@ -310,7 +310,8 @@
 
             let result = this.recepcion.detalles ? this.recepcion.detalles.reduce((total, product) => {
 
-                let impuesto = (this.parse(product.costo) - (this.parse(product.descuento) / 100) * this.parse(product.costo)) * (product.impuesto / 100);
+                let impuesto = (this.parse(product.costo) - (this.parse(product.descuento) / 100) 
+                                * this.parse(product.costo)) * (product.impuesto / 100);
                 return total + (impuesto * product.cantidad);
 
             }, 0) : 0;
