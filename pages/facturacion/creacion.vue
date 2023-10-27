@@ -173,8 +173,7 @@
                 v => !!v || '',
             ],
             numberRules: [
-                v => !!v || '',
-                v => v > 0 || ''
+                v => v >= 0 || ''
             ],
             facturacion: {
                 almacenId: null,
@@ -283,10 +282,6 @@
         },
 
         async guardar(){
-            //testing
-            this.isNew = true;
-            this.$router.push({ path: '/facturacion/detalle', query: { id: 6, isNew: this.isNew } });
-            return;
             if (this.$refs.form.validate()) {
                 try {
                     this.$print(this.facturacion);

@@ -168,8 +168,7 @@
                 v => !!v || '',
             ],
             numberRules: [
-                v => !!v || '',
-                v => v > 0 || ''
+                v => v >= 0 || ''
             ],
             recepcion: {
                 proveedorId: null,

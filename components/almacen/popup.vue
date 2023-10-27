@@ -2,7 +2,7 @@
     <div v-if="mounted">
       <v-dialog v-model="activador" width="600" persistent>
         <v-card class="almacenPopup">
-            <v-card-title>
+            <v-card-title class="px-10">
                 <h3 class="primary--text">{{title}}</h3>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="clean"><v-icon>mdi-close</v-icon></v-btn>
@@ -10,23 +10,23 @@
             <v-card-text class="pt-4 pb-9 px-10">
                 <div ref="form" v-if="verDetalles">
                     <v-row>
-                        <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Nombre: </span>
+                        <v-col cols="12" md="6" class="py-2">
+                            <span class="inputTitle" ><b>Nombre: </b></span>
                             <span >{{almacen.nombre}}</span>
                            
                         </v-col>
-                        <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Cacapidad: </span>
+                        <v-col cols="12" md="6" class="py-2">
+                            <span class="inputTitle" ><b>Cacapidad: </b></span>
                             <span>{{almacen.capacidad}}</span>
                         </v-col>
                     </v-row>
                     <v-row >
-                        <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Ubicación: </span>
+                        <v-col cols="12" md="6" class="py-2">
+                            <span class="inputTitle" ><b>Ubicación: </b></span>
                             <span>{{almacen.ubicacion}}</span>
                         </v-col>
-                        <v-col cols="12" md="6" class="py-0">
-                            <span class="inputTitle" >Descripción</span>
+                        <v-col cols="12" md="6" class="py-2">
+                            <span class="inputTitle" ><b>Descripción: </b></span>
                             <span>{{almacen.descripcion}}</span>
                         </v-col>
                     </v-row>
@@ -101,7 +101,11 @@
     async mounted(){
 
       if(this.editable){
-        this.title = "Editar almacén"
+        if(this.verDetalles){
+            this.title = "Visualización de almacén";
+        }else{
+            this.title = "Editar almacén";
+        }
         this.almacen = this.editable;
       }
       this.mounted = true;

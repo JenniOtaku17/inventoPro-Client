@@ -47,7 +47,7 @@
                         <td>{{ item.producto?.nombre }}</td>
                         <td align="right"><formatNumber :value="item.producto?.precio" /></td>
                         <td align="center">{{ item.producto?.impuesto }}%</td>
-                        <td align="center">{{ item.producto?.descuento }}%</td>
+                        <td align="center">{{ item.descuento }}%</td>
                         <td align="center">{{ item.cantidad }}</td>
                         <td align="right"><formatNumber :value="item.total" /></td>
                     </tr>
@@ -258,7 +258,7 @@
     }
 
     .customTable{
-        padding: 30px 0px;
+        margin: 30px 0px;
 
         td{
             font-size: 14px!important;
