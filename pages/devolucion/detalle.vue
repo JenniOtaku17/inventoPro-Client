@@ -23,13 +23,16 @@
         <div id="element-to-print">
 
             <h2 class="facturaTitle">
-                Factura &nbsp;No.{{ devolucion.id }}
+                Devolución &nbsp;No.{{ devolucion.id }}
             </h2>
 
             <div class="infoContainer">
-                <div>
+                <div class="cliente">
+                    <div class="facturaDetails"> <b>Factura No.{{ devolucion.factura?.id }}</b></div>
+                </div>
+                <div class="empresa">
                     <div class="facturaDetails">{{ devolucion.almacen?.ubicacion }}</div>
-                    <div class="facturaDetails">Facturado por {{ devolucion.usuario?.nombre }}</div>
+                    <div class="facturaDetails">Atendido por {{ devolucion.usuario?.nombre }}</div>
                     <div class="facturaDetails">{{ formatDate(devolucion.fecha, true) }} </div>
                 </div>
             </div>
@@ -44,6 +47,7 @@
                         <td>{{ item.producto?.nombre }}</td>
                         <td align="right"><formatNumber :value="item.producto?.precio" /></td>
                         <td align="center">{{ item.producto?.impuesto }}%</td>
+                        <td align="center">{{ item.producto?.descuento }}%</td>
                         <td align="center">{{ item.cantidad }}</td>
                         <td align="right"><formatNumber :value="item.total" /></td>
                     </tr>
@@ -84,7 +88,7 @@
                                 </tr>
                                 <tr class="finalDetail">
                                     <td align="left">
-                                        Descuento
+                                        Descuentos
                                     </td>
                                     <td align="right">
                                         <formatNumber :value="devolucion.descuentos" />
@@ -120,7 +124,11 @@
   
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.getAll();
+        await this.getAll();
+
+        if(this.$route.query.isCreating === 'true'){
+            this.imprimir();
+        }
     },
 
     components: {
@@ -135,6 +143,7 @@
                 { text: "Producto", value: 'nombre' },
                 { text: "Precio", value: "precio", align: "end", sortable: false },
                 { text: "Impuesto", value: "impuesto", align: "center", sortable: false },
+                { text: "Descuento", value: "descuentos", align: "center", sortable: false },
                 { text: "Cantidad", value: "cantidad", align: "center", sortable: false },
                 { text: "Total", value: "total", align: "end", sortable: false },
             ],

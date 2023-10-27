@@ -199,6 +199,11 @@
             this.devolucion.detalles = factura.data.detalles;
         },
 
+        verDetalle( id ){
+            let isCreating = true;
+            this.$router.push({ path: '/devolucion/detalle', query: { id, isCreating } })
+        },
+
         async guardar(){
             if (this.$refs.form.validate()) {
                 try {
@@ -221,6 +226,7 @@
                         });
                         devolucion.detalles = devolucion.detalles.filter(x => x.selected)
                         let response = await this.$api.post("api/devolucion", devolucion);
+                        this.verDetalle(response.data.id);
                         this.$print(response);
                     }
 

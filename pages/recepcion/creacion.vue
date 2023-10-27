@@ -261,6 +261,11 @@
             this.dialog = false;
         },
 
+        verDetalle( id ){
+            let isCreating = true;
+            this.$router.push({ path: '/recepcion/detalle', query: { id, isCreating } })
+        },
+
         async guardar(){
             if (this.$refs.form.validate()) {
                 try {
@@ -273,6 +278,7 @@
                         this.recepcion.usuarioId = this.user.id;
                         await this.recepcion.detalles.map((recepcion)=> { recepcion.id = 0})
                         let response = await this.$api.post("api/recepcion", this.recepcion);
+                        this.verDetalle(response.data.id);
                         this.$print(response);
                     }
 
