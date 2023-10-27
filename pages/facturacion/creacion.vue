@@ -276,6 +276,11 @@
             this.dialog = false;
         },
 
+        verDetalle( id ){
+            let isCreating = true;
+            this.$router.push({ path: '/facturacion/detalle', query: { id, isCreating } })
+        },
+
         async guardar(){
             if (this.$refs.form.validate()) {
                 try {
@@ -288,6 +293,7 @@
                         this.facturacion.usuarioId = this.user.id;
                         await this.facturacion.detalles.map((facturacion)=> { facturacion.id = 0})
                         let response = await this.$api.post("api/factura", this.facturacion);
+                        this.verDetalle(response.data.id);
                         this.$print(response);
                     }
 

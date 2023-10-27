@@ -126,7 +126,11 @@
   
     async mounted(){
         this.user = await this.$store.state.userManager.user;
-        this.getAll();
+        await this.getAll();
+        
+        if(this.$route.query.isCreating === 'true'){
+            this.imprimir();
+        }
     },
 
     components: {
